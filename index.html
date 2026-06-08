@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Калькулятор ТПА</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--card);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .container {
+            padding: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .tpa-card {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .tpa-header {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tpa-mini-result {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: right;
+            line-height: 1.4;
+        }
+        .tpa-mini-result .good {
+            color: var(--success);
+        }
+        .tpa-mini-result .defect {
+            color: var(--danger);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+        select, input {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            background: #f8fafc;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+        .input-defect {
+            border-color: #fca5a5 !important;
+            background-color: #fff5f5 !important;
+        }
+        .input-defect:focus {
+            border-color: var(--danger) !important;
+        }
+
+        .summary-list {
+            background: var(--card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border-bottom: 1px solid var(--bg);
+        }        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-tpa {
+            font-weight: 700;
+            color: var(--primary-dark);
+            min-width: 80px;
+        }
+        .summary-data {
+            text-align: right;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .summary-data .parts {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .summary-data .weight-good {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .summary-data .weight-defect {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .summary-data .weight-total {
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+        
+        .material-summary-header {
+            padding: 12px 14px;
+            font-weight: 700;
+            background: #f0fdf4;
+            border-bottom: 1px solid #bbf7d0;
+            color: #166534;
+            font-size: 1rem;
+        }
+        .material-item {
+            background: #f0fdf4;
+        }
+        .material-item .summary-tpa {
+            color: #166534;
+        }
+        .material-item .parts {
+            color: #166534;
+            font-size: 0.95rem;
+        }
+
+        .empty-hint {            text-align: center;
+            color: #94a3b8;
+            padding: 30px 20px;
+            font-style: italic;
+            background: var(--card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        .reset-btn:active {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('calc')">🧮 Калькулятор</button>
+        <button class="tab-btn" onclick="switchTab('setup')">🔧 Для наладчика</button>
+    </div>
+
+    <div class="container">
+        <div id="tab-calc" class="tab-content active">
+            <div id="tpa-container"></div>
+            <button class="reset-btn" onclick="resetAll()">🗑️ Очистить все данные</button>
+        </div>
+
+        <div id="tab-setup" class="tab-content">
+            <div class="summary-list" id="summary-container"></div>
+        </div>
+        <div style="height: 20px;"></div>
+    </div>
+
+    <script>
+        const tpaList = [
+            "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6",
+            "ТПА 7", "ТПА 8", "ТПА 9", "ТПА 10", "ТПА 11", "ТПА 12",
+            "ТПА 13", "Малыш"        ];
+        const materials = ["АБС", "ПВХ серый", "ПВХ коричневый", "PP"];
+
+        function init() {
+            const container = document.getElementById('tpa-container');
+            let html = '';
+            
+            tpaList.forEach((tpa, index) => {
+                const matOptions = materials.map(m => `<option value="${m}">${m}</option>`).join('');
+                
+                html += `
+                <div class="tpa-card" data-tpa="${tpa}">
+                    <div class="tpa-header">
+                        <span>${tpa}</span>
+                        <div class="tpa-mini-result" id="res-${index}">
+                            <div class="good">0 годн.</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Материал</label>
+                            <select class="calc-input" data-idx="${index}" data-field="mat">
+                                ${matOptions}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Шт. в коробке</label>
+                            <input type="number" class="calc-input" data-idx="${index}" data-field="perBox" inputmode="numeric" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Кол-во коробок</label>
+                            <input type="number" class="calc-input" data-idx="${index}" data-field="boxes" inputmode="numeric" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Вес 1 дет. (г)</label>
+                            <input type="number" class="calc-input" data-idx="${index}" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">
+                        </div>
+                        <div class="form-group">
+                            <label style="color: var(--danger);">Брак (шт)</label>
+                            <input type="number" class="calc-input input-defect" data-idx="${index}" data-field="defect" inputmode="numeric" placeholder="0">
+                        </div>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+            container.addEventListener('input', calculateAll);            calculateAll();
+        }
+
+        function calculateAll() {
+            const inputs = document.querySelectorAll('.calc-input');
+            const data = {};
+            
+            tpaList.forEach((tpa, index) => {
+                data[index] = {
+                    name: tpa,
+                    mat: 'Не выбрано',
+                    perBox: 0,
+                    boxes: 0,
+                    weight: 0,
+                    defect: 0
+                };
+            });
+
+            inputs.forEach(input => {
+                const idx = input.dataset.idx;
+                const field = input.dataset.field;
+                if (field === 'mat') {
+                    data[idx].mat = input.value;
+                } else {
+                    const val = parseFloat(input.value);
+                    if (!isNaN(val) && val >= 0) {
+                        data[idx][field] = val;
+                    }
+                }
+            });
+
+            let summaryHtml = '';
+            let hasData = false;
+            const materialTotals = {};
+
+            tpaList.forEach((tpa, index) => {
+                const d = data[index];
+                const totalParts = d.perBox * d.boxes;
+                const goodParts = Math.max(0, totalParts - d.defect);
+                
+                const goodWeightGrams = goodParts * d.weight;
+                const defectWeightGrams = d.defect * d.weight;
+                const totalWeightGrams = goodWeightGrams + defectWeightGrams;
+                
+                const goodWeightKg = goodWeightGrams / 1000;
+                const defectWeightKg = defectWeightGrams / 1000;
+                const totalWeightKg = totalWeightGrams / 1000;
+
+                const resEl = document.getElementById(`res-${index}`);
+                if (totalParts > 0) {                    let miniHtml = `<div class="good">${goodParts} годн. / ${goodWeightKg.toFixed(3)} кг</div>`;
+                    if (d.defect > 0) {
+                        miniHtml += `<div class="defect">${d.defect} брак / ${defectWeightKg.toFixed(3)} кг</div>`;
+                    }
+                    resEl.innerHTML = miniHtml;
+                    hasData = true;
+                } else {
+                    resEl.innerHTML = `<div class="good">0 годн.</div>`;
+                }
+
+                if (totalParts > 0) {
+                    summaryHtml += `
+                    <div class="summary-item">
+                        <div class="summary-tpa">${tpa}</div>
+                        <div class="summary-data">
+                            <div class="parts">${goodParts} годн. / ${d.defect} брак</div>
+                            <div class="weight-good">Готовая: ${goodWeightKg.toFixed(3)} кг</div>
+                            <div class="weight-defect">Брак: ${defectWeightKg.toFixed(3)} кг</div>
+                            <div class="weight-total">Всего: ${totalWeightKg.toFixed(3)} кг</div>
+                        </div>
+                    </div>`;
+
+                    if (!materialTotals[d.mat]) {
+                        materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
+                    }
+                    materialTotals[d.mat].totalWeight += totalWeightKg;
+                    materialTotals[d.mat].goodWeight += goodWeightKg;
+                    materialTotals[d.mat].defectWeight += defectWeightKg;
+                }
+            });
+
+            if (hasData) {
+                let matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью:</div>';
+                for (const [mat, stats] of Object.entries(materialTotals)) {
+                    matSummaryHtml += `
+                    <div class="summary-item material-item">
+                        <div class="summary-tpa">${mat}</div>
+                        <div class="summary-data">
+                            <div class="parts">${stats.totalWeight.toFixed(3)} кг всего</div>
+                            <div class="weight-good">Готовая: ${stats.goodWeight.toFixed(3)} кг</div>
+                            <div class="weight-defect">Брак: ${stats.defectWeight.toFixed(3)} кг</div>
+                        </div>
+                    </div>`;
+                }
+                summaryHtml += matSummaryHtml;
+                document.getElementById('summary-container').innerHTML = summaryHtml;
+            } else {
+                document.getElementById('summary-container').innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
+            }
+        }
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            const btns = document.querySelectorAll('.tab-btn');
+            if (tabName === 'calc') {
+                btns[0].classList.add('active');
+            } else {
+                btns[1].classList.add('active');
+                calculateAll();
+            }
+        }
+
+        function resetAll() {
+            if(confirm('Очистить все введенные данные?')) {
+                document.querySelectorAll('.calc-input').forEach(input => {
+                    if (input.tagName === 'SELECT') input.selectedIndex = 0;
+                    else input.value = '';
+                });
+                calculateAll();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
