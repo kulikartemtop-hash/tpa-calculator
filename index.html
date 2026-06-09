@@ -85,22 +85,18 @@
             text-align: right;
             line-height: 1.4;
         }
-        .tpa-mini-result .good {
-            color: var(--success);
-        }
-        .tpa-mini-result .defect {
-            color: var(--danger);
-        }
+        .tpa-mini-result .good { color: var(--success); }
+        .tpa-mini-result .defect { color: var(--danger); }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 10px;        }
+            margin-bottom: 10px;
+        }
         .form-group {
             display: flex;
-            flex-direction: column;
-        }
+            flex-direction: column;        }
         .form-group.full-width {
             grid-column: 1 / -1;
         }
@@ -145,12 +141,11 @@
             align-items: center;
             padding: 14px;
             border-bottom: 1px solid var(--bg);
-        }        .summary-item:last-child {
-            border-bottom: none;
         }
+        .summary-item:last-child { border-bottom: none; }
+        
         .summary-tpa {
-            font-weight: 700;
-            color: var(--primary-dark);
+            font-weight: 700;            color: var(--primary-dark);
             min-width: 80px;
         }
         .summary-data {
@@ -183,18 +178,12 @@
             color: #166534;
             font-size: 1rem;
         }
-        .material-item {
-            background: #f0fdf4;
-        }
-        .material-item .summary-tpa {
-            color: #166534;
-        }
-        .material-item .parts {
-            color: #166534;
-            font-size: 0.95rem;
-        }
+        .material-item { background: #f0fdf4; }
+        .material-item .summary-tpa { color: #166534; }
+        .material-item .parts { color: #166534; font-size: 0.95rem; }
 
-        .empty-hint {            text-align: center;
+        .empty-hint {
+            text-align: center;
             color: #94a3b8;
             padding: 30px 20px;
             font-style: italic;
@@ -205,8 +194,7 @@
 
         .reset-btn {
             width: 100%;
-            padding: 14px;
-            background-color: var(--danger);
+            padding: 14px;            background-color: var(--danger);
             color: white;
             border: none;
             border-radius: 8px;
@@ -215,9 +203,7 @@
             margin-top: 20px;
             margin-bottom: 40px;
         }
-        .reset-btn:active {
-            background-color: #dc2626;
-        }
+        .reset-btn:active { background-color: #dc2626; }
     </style>
 </head>
 <body>
@@ -243,8 +229,11 @@
         const tpaList = [
             "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6",
             "ТПА 7", "ТПА 8", "ТПА 9", "ТПА 10", "ТПА 11", "ТПА 12",
-            "ТПА 13", "Малыш"        ];
-        const materials = ["АБС", "ПВХ серый", "ПВХ коричневый", "PP"];
+            "ТПА 13", "Малыш"
+        ];
+        
+        // ИЗМЕНЕННЫЙ ПОРЯДОК МАТЕРИАЛОВ:
+        const materials = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
         function init() {
             const container = document.getElementById('tpa-container');
@@ -254,11 +243,10 @@
                 const matOptions = materials.map(m => `<option value="${m}">${m}</option>`).join('');
                 
                 html += `
-                <div class="tpa-card" data-tpa="${tpa}">
-                    <div class="tpa-header">
+                <div class="tpa-card" data-tpa="${tpa}">                    <div class="tpa-header">
                         <span>${tpa}</span>
                         <div class="tpa-mini-result" id="res-${index}">
-                            <div class="good">0 годн.</div>
+                            <div class="good">0 шт</div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -271,28 +259,29 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Шт. в коробке</label>
+                            <label style="color: var(--success);">Готовые: шт. в кор.</label>
                             <input type="number" class="calc-input" data-idx="${index}" data-field="perBox" inputmode="numeric" placeholder="0">
                         </div>
                         <div class="form-group">
-                            <label>Кол-во коробок</label>
+                            <label style="color: var(--success);">Готовые: кол-во кор.</label>
                             <input type="number" class="calc-input" data-idx="${index}" data-field="boxes" inputmode="numeric" placeholder="0">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Вес 1 дет. (г)</label>
-                            <input type="number" class="calc-input" data-idx="${index}" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">
-                        </div>
-                        <div class="form-group">
                             <label style="color: var(--danger);">Брак (шт)</label>
                             <input type="number" class="calc-input input-defect" data-idx="${index}" data-field="defect" inputmode="numeric" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Вес 1 дет. (г)</label>
+                            <input type="number" class="calc-input" data-idx="${index}" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">
                         </div>
                     </div>
                 </div>`;
             });
             container.innerHTML = html;
-            container.addEventListener('input', calculateAll);            calculateAll();
+            container.addEventListener('input', calculateAll);
+            calculateAll();
         }
 
         function calculateAll() {
@@ -303,8 +292,7 @@
                 data[index] = {
                     name: tpa,
                     mat: 'Не выбрано',
-                    perBox: 0,
-                    boxes: 0,
+                    perBox: 0,                    boxes: 0,
                     weight: 0,
                     defect: 0
                 };
@@ -329,37 +317,35 @@
 
             tpaList.forEach((tpa, index) => {
                 const d = data[index];
-                const totalParts = d.perBox * d.boxes;
-                const goodParts = Math.max(0, totalParts - d.defect);
                 
-                const goodWeightGrams = goodParts * d.weight;
-                const defectWeightGrams = d.defect * d.weight;
-                const totalWeightGrams = goodWeightGrams + defectWeightGrams;
+                // СЧИТАЕМ ОТДЕЛЬНО:
+                const goodParts = d.perBox * d.boxes; // Только готовые
+                const defectParts = d.defect;         // Только брак
                 
-                const goodWeightKg = goodWeightGrams / 1000;
-                const defectWeightKg = defectWeightGrams / 1000;
-                const totalWeightKg = totalWeightGrams / 1000;
+                const goodWeightKg = (goodParts * d.weight) / 1000;
+                const defectWeightKg = (defectParts * d.weight) / 1000;
+                const totalWeightKg = goodWeightKg + defectWeightKg;
 
                 const resEl = document.getElementById(`res-${index}`);
-                if (totalParts > 0) {                    let miniHtml = `<div class="good">${goodParts} годн. / ${goodWeightKg.toFixed(3)} кг</div>`;
-                    if (d.defect > 0) {
-                        miniHtml += `<div class="defect">${d.defect} брак / ${defectWeightKg.toFixed(3)} кг</div>`;
+                if (goodParts > 0 || defectParts > 0) {
+                    let miniHtml = `<div class="good">Гот: ${goodParts} шт</div>`;
+                    if (defectParts > 0) {
+                        miniHtml += `<div class="defect">Брак: ${defectParts} шт</div>`;
                     }
                     resEl.innerHTML = miniHtml;
                     hasData = true;
                 } else {
-                    resEl.innerHTML = `<div class="good">0 годн.</div>`;
+                    resEl.innerHTML = `<div class="good">0 шт</div>`;
                 }
 
-                if (totalParts > 0) {
+                if (goodParts > 0 || defectParts > 0) {
                     summaryHtml += `
                     <div class="summary-item">
-                        <div class="summary-tpa">${tpa}</div>
-                        <div class="summary-data">
-                            <div class="parts">${goodParts} годн. / ${d.defect} брак</div>
-                            <div class="weight-good">Готовая: ${goodWeightKg.toFixed(3)} кг</div>
-                            <div class="weight-defect">Брак: ${defectWeightKg.toFixed(3)} кг</div>
-                            <div class="weight-total">Всего: ${totalWeightKg.toFixed(3)} кг</div>
+                        <div class="summary-tpa">${tpa}</div>                        <div class="summary-data">
+                            <div class="parts">Гот: ${goodParts} шт | Брак: ${defectParts} шт</div>
+                            <div class="weight-good">Вес готовых: ${goodWeightKg.toFixed(3)} кг</div>
+                            <div class="weight-defect">Вес брака: ${defectWeightKg.toFixed(3)} кг</div>
+                            <div class="weight-total">Общий вес: ${totalWeightKg.toFixed(3)} кг</div>
                         </div>
                     </div>`;
 
@@ -380,7 +366,7 @@
                         <div class="summary-tpa">${mat}</div>
                         <div class="summary-data">
                             <div class="parts">${stats.totalWeight.toFixed(3)} кг всего</div>
-                            <div class="weight-good">Готовая: ${stats.goodWeight.toFixed(3)} кг</div>
+                            <div class="weight-good">Готовые: ${stats.goodWeight.toFixed(3)} кг</div>
                             <div class="weight-defect">Брак: ${stats.defectWeight.toFixed(3)} кг</div>
                         </div>
                     </div>`;
@@ -391,6 +377,7 @@
                 document.getElementById('summary-container').innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
             }
         }
+
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -404,7 +391,6 @@
                 calculateAll();
             }
         }
-
         function resetAll() {
             if(confirm('Очистить все введенные данные?')) {
                 document.querySelectorAll('.calc-input').forEach(input => {
