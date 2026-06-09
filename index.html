@@ -1,37 +1,92 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light" data-wallpaper="1">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Калькулятор ТПА</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --bg: #f1f5f9;
-            --card: #ffffff;
+            /* Светлая тема (по умолчанию) */
+            --bg: #f0f4f8;
+            --card: rgba(255, 255, 255, 0.95);
             --text: #1e293b;
+            --text-secondary: #64748b;
             --border: #cbd5e1;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
             --success: #10b981;
             --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
+
+        [data-theme="dark"] {
+            /* Тёмная тема */
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.95);
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --primary: #60a5fa;
+            --primary-dark: #3b82f6;
+            --success: #34d399;
+            --danger: #f87171;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Варианты обоев (фонов) */
+        [data-wallpaper="1"] body { background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); }
+        [data-theme="dark"][data-wallpaper="1"] body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        
+        [data-wallpaper="2"] body { background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); }
+        [data-theme="dark"][data-wallpaper="2"] body { background: linear-gradient(120deg, #1e1b4b 0%, #312e81 100%); }
+        
+        [data-wallpaper="3"] body { background: radial-gradient(circle at 10% 20%, rgb(239, 246, 255) 0%, rgb(219, 228, 255) 90%); }
+        [data-theme="dark"][data-wallpaper="3"] body { background: radial-gradient(circle at 10% 20%, #1e293b 0%, #0f172a 90%); }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 0;
-            font-size: 15px;
+            padding: 0;            font-size: 15px;
             -webkit-tap-highlight-color: transparent;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
         }
-        
+
+        .top-controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--card);
+            gap: 10px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 101;
+        }
+        .icon-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+        .compact-select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
         .tabs {
             display: flex;
             background: var(--card);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
         }
         .tab-btn {
             flex: 1;
@@ -40,41 +95,42 @@
             background: transparent;
             font-size: 1rem;
             font-weight: 600;
-            color: #64748b;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
+            color: var(--text-secondary);
+            cursor: pointer;            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
         }
         .tab-btn.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
         }
+
         .container {
             padding: 12px;
             max-width: 600px;
             margin: 0 auto;
         }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .tpa-card {
             background: var(--card);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
             border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+            box-shadow: var(--shadow);
+            transition: transform 0.1s;
         }
+        .tpa-card:active { transform: scale(0.98); }
+        
         .tpa-header {
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: var(--primary-dark);
-            margin-bottom: 10px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid var(--bg);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -89,21 +145,17 @@
         .tpa-mini-result .defect { color: var(--danger); }
 
         .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: grid;            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 10px;
         }
-        .form-group {
-            display: flex;
-            flex-direction: column;        }
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        
         label {
             font-size: 0.8rem;
             font-weight: 600;
-            color: #475569;
+            color: var(--text-secondary);
             margin-bottom: 4px;
         }
         select, input {
@@ -111,41 +163,42 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 16px;
-            background: #f8fafc;
+            background: var(--bg);
+            color: var(--text);
             width: 100%;
             box-sizing: border-box;
+            transition: border-color 0.2s;
         }
         select:focus, input:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
+            background: var(--card);
         }
         .input-defect {
             border-color: #fca5a5 !important;
-            background-color: #fff5f5 !important;
+            background-color: rgba(239, 68, 68, 0.05) !important;
         }
-        .input-defect:focus {
-            border-color: var(--danger) !important;
-        }
+        .input-defect:focus { border-color: var(--danger) !important; }
 
         .summary-list {
             background: var(--card);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border);
             margin-bottom: 20px;
+            box-shadow: var(--shadow);
         }
         .summary-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 14px;
-            border-bottom: 1px solid var(--bg);
-        }
-        .summary-item:last-child { border-bottom: none; }
+            border-bottom: 1px solid var(--border);
+        }        .summary-item:last-child { border-bottom: none; }
         
         .summary-tpa {
-            font-weight: 700;            color: var(--primary-dark);
+            font-weight: 700;
+            color: var(--primary-dark);
             min-width: 80px;
         }
         .summary-data {
@@ -153,60 +206,58 @@
             font-size: 0.85rem;
             line-height: 1.5;
         }
-        .summary-data .parts {
-            font-weight: 600;
-            color: var(--text);
-        }
-        .summary-data .weight-good {
-            color: var(--success);
-            font-weight: 600;
-        }
-        .summary-data .weight-defect {
-            color: var(--danger);
-            font-weight: 600;
-        }
-        .summary-data .weight-total {
-            color: #64748b;
-            font-size: 0.8rem;
-        }
+        .summary-data .parts { font-weight: 600; color: var(--text); }
+        .summary-data .weight-good { color: var(--success); font-weight: 600; }
+        .summary-data .weight-defect { color: var(--danger); font-weight: 600; }
+        .summary-data .weight-total { color: var(--text-secondary); font-size: 0.8rem; }
         
         .material-summary-header {
             padding: 12px 14px;
             font-weight: 700;
-            background: #f0fdf4;
-            border-bottom: 1px solid #bbf7d0;
-            color: #166534;
+            background: rgba(16, 185, 129, 0.1);
+            border-bottom: 1px solid var(--border);
+            color: var(--success);
             font-size: 1rem;
         }
-        .material-item { background: #f0fdf4; }
-        .material-item .summary-tpa { color: #166534; }
-        .material-item .parts { color: #166534; font-size: 0.95rem; }
+        .material-item { background: rgba(16, 185, 129, 0.05); }
+        .material-item .summary-tpa { color: var(--success); }
+        .material-item .parts { color: var(--success); font-size: 0.95rem; }
 
         .empty-hint {
             text-align: center;
-            color: #94a3b8;
+            color: var(--text-secondary);
             padding: 30px 20px;
             font-style: italic;
             background: var(--card);
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid var(--border);
         }
 
         .reset-btn {
             width: 100%;
-            padding: 14px;            background-color: var(--danger);
+            padding: 14px;
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             margin-top: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 40px;            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
         }
-        .reset-btn:active { background-color: #dc2626; }
+        .reset-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
+
+    <div class="top-controls">
+        <select id="wallpaper-select" class="compact-select" onchange="changeWallpaper(this.value)">
+            <option value="1">🎨 Фон: Спокойный</option>
+            <option value="2">🌈 Фон: Яркий</option>
+            <option value="3">🌌 Фон: Глубокий</option>
+        </select>
+        <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Сменить тему">🌙</button>
+    </div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('calc')">🧮 Калькулятор</button>
@@ -231,19 +282,24 @@
             "ТПА 7", "ТПА 8", "ТПА 9", "ТПА 10", "ТПА 11", "ТПА 12",
             "ТПА 13", "Малыш"
         ];
-        
-        // ИЗМЕНЕННЫЙ ПОРЯДОК МАТЕРИАЛОВ:
         const materials = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
         function init() {
+            // Загрузка настроек темы и фона
+            const savedTheme = localStorage.getItem('tpa_theme') || 'light';
+            const savedWallpaper = localStorage.getItem('tpa_wallpaper') || '1';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.documentElement.setAttribute('data-wallpaper', savedWallpaper);
+            document.getElementById('wallpaper-select').value = savedWallpaper;
+            updateThemeIcon(savedTheme);
             const container = document.getElementById('tpa-container');
             let html = '';
             
             tpaList.forEach((tpa, index) => {
                 const matOptions = materials.map(m => `<option value="${m}">${m}</option>`).join('');
-                
                 html += `
-                <div class="tpa-card" data-tpa="${tpa}">                    <div class="tpa-header">
+                <div class="tpa-card" data-tpa="${tpa}">
+                    <div class="tpa-header">
                         <span>${tpa}</span>
                         <div class="tpa-mini-result" id="res-${index}">
                             <div class="good">0 шт</div>
@@ -280,22 +336,65 @@
                 </div>`;
             });
             container.innerHTML = html;
-            container.addEventListener('input', calculateAll);
+            
+            loadData();
+            
+            container.addEventListener('input', () => {
+                calculateAll();
+                saveData();            });
+            
             calculateAll();
         }
 
-        function calculateAll() {
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('tpa_theme', next);
+            updateThemeIcon(next);
+        }
+
+        function updateThemeIcon(theme) {
+            document.getElementById('theme-btn').textContent = theme === 'light' ? '🌙' : '☀️';
+        }
+
+        function changeWallpaper(val) {
+            document.documentElement.setAttribute('data-wallpaper', val);
+            localStorage.setItem('tpa_wallpaper', val);
+        }
+
+        function saveData() {
             const inputs = document.querySelectorAll('.calc-input');
+            const dataToSave = {};
+            inputs.forEach(input => {
+                const idx = input.dataset.idx;
+                const field = input.dataset.field;
+                if (!dataToSave[idx]) dataToSave[idx] = {};
+                dataToSave[idx][field] = input.value;
+            });
+            localStorage.setItem('tpa_calc_data', JSON.stringify(dataToSave));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('tpa_calc_data');
+            if (saved) {
+                const dataToSave = JSON.parse(saved);
+                const inputs = document.querySelectorAll('.calc-input');
+                inputs.forEach(input => {
+                    const idx = input.dataset.idx;
+                    const field = input.dataset.field;
+                    if (dataToSave[idx] && dataToSave[idx][field] !== undefined) {
+                        input.value = dataToSave[idx][field];
+                    }
+                });
+            }
+        }
+
+        function calculateAll() {            const inputs = document.querySelectorAll('.calc-input');
             const data = {};
             
             tpaList.forEach((tpa, index) => {
-                data[index] = {
-                    name: tpa,
-                    mat: 'Не выбрано',
-                    perBox: 0,                    boxes: 0,
-                    weight: 0,
-                    defect: 0
-                };
+                data[index] = { name: tpa, mat: 'Не выбрано', perBox: 0, boxes: 0, weight: 0, defect: 0 };
             });
 
             inputs.forEach(input => {
@@ -317,10 +416,8 @@
 
             tpaList.forEach((tpa, index) => {
                 const d = data[index];
-                
-                // СЧИТАЕМ ОТДЕЛЬНО:
-                const goodParts = d.perBox * d.boxes; // Только готовые
-                const defectParts = d.defect;         // Только брак
+                const goodParts = d.perBox * d.boxes;
+                const defectParts = d.defect;
                 
                 const goodWeightKg = (goodParts * d.weight) / 1000;
                 const defectWeightKg = (defectParts * d.weight) / 1000;
@@ -341,8 +438,8 @@
                 if (goodParts > 0 || defectParts > 0) {
                     summaryHtml += `
                     <div class="summary-item">
-                        <div class="summary-tpa">${tpa}</div>                        <div class="summary-data">
-                            <div class="parts">Гот: ${goodParts} шт | Брак: ${defectParts} шт</div>
+                        <div class="summary-tpa">${tpa}</div>
+                        <div class="summary-data">                            <div class="parts">Гот: ${goodParts} шт | Брак: ${defectParts} шт</div>
                             <div class="weight-good">Вес готовых: ${goodWeightKg.toFixed(3)} кг</div>
                             <div class="weight-defect">Вес брака: ${defectWeightKg.toFixed(3)} кг</div>
                             <div class="weight-total">Общий вес: ${totalWeightKg.toFixed(3)} кг</div>
@@ -358,6 +455,7 @@
                 }
             });
 
+            const summaryContainer = document.getElementById('summary-container');
             if (hasData) {
                 let matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью:</div>';
                 for (const [mat, stats] of Object.entries(materialTotals)) {
@@ -372,9 +470,9 @@
                     </div>`;
                 }
                 summaryHtml += matSummaryHtml;
-                document.getElementById('summary-container').innerHTML = summaryHtml;
+                summaryContainer.innerHTML = summaryHtml;
             } else {
-                document.getElementById('summary-container').innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
+                summaryContainer.innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
             }
         }
 
@@ -392,16 +490,9 @@
             }
         }
         function resetAll() {
-            if(confirm('Очистить все введенные данные?')) {
+            if(confirm('Очистить все введенные данные? Настройки темы и фона останутся.')) {
                 document.querySelectorAll('.calc-input').forEach(input => {
                     if (input.tagName === 'SELECT') input.selectedIndex = 0;
                     else input.value = '';
                 });
-                calculateAll();
-            }
-        }
-
-        init();
-    </script>
-</body>
-</html>
+                localSto
