@@ -6,7 +6,6 @@
     <title>Калькулятор ТПА</title>
     <style>
         :root {
-            /* Светлая тема (по умолчанию) */
             --bg: #f0f4f8;
             --card: rgba(255, 255, 255, 0.95);
             --text: #1e293b;
@@ -20,7 +19,6 @@
         }
 
         [data-theme="dark"] {
-            /* Тёмная тема */
             --bg: #0f172a;
             --card: rgba(30, 41, 59, 0.95);
             --text: #f1f5f9;
@@ -33,7 +31,6 @@
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
         }
 
-        /* Варианты обоев (фонов) */
         [data-wallpaper="1"] body { background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); }
         [data-theme="dark"][data-wallpaper="1"] body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
         
@@ -47,10 +44,10 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: var(--text);
             margin: 0;
-            padding: 0;            font-size: 15px;
+            padding: 0;
+            font-size: 15px;
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.3s ease, color 0.3s ease;
-            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;            min-height: 100vh;
         }
 
         .top-controls {
@@ -96,10 +93,10 @@
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-secondary);
-            cursor: pointer;            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
             transition: all 0.2s;
-        }
-        .tab-btn.active {
+        }        .tab-btn.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
         }
@@ -145,10 +142,10 @@
         .tpa-mini-result .defect { color: var(--danger); }
 
         .form-row {
-            display: grid;            grid-template-columns: 1fr 1fr;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 10px;
-        }
+            margin-bottom: 10px;        }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
         
@@ -194,10 +191,10 @@
             align-items: center;
             padding: 14px;
             border-bottom: 1px solid var(--border);
-        }        .summary-item:last-child { border-bottom: none; }
+        }
+        .summary-item:last-child { border-bottom: none; }
         
-        .summary-tpa {
-            font-weight: 700;
+        .summary-tpa {            font-weight: 700;
             color: var(--primary-dark);
             min-width: 80px;
         }
@@ -243,10 +240,10 @@
             font-size: 1rem;
             font-weight: 600;
             margin-top: 20px;
-            margin-bottom: 40px;            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
         }
-        .reset-btn:active { transform: scale(0.98); }
-    </style>
+        .reset-btn:active { transform: scale(0.98); }    </style>
 </head>
 <body>
 
@@ -284,14 +281,25 @@
         ];
         const materials = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
+        // Инициализация после загрузки DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
+
         function init() {
             // Загрузка настроек темы и фона
             const savedTheme = localStorage.getItem('tpa_theme') || 'light';
             const savedWallpaper = localStorage.getItem('tpa_wallpaper') || '1';
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.documentElement.setAttribute('data-wallpaper', savedWallpaper);
-            document.getElementById('wallpaper-select').value = savedWallpaper;
+                        // Устанавливаем значение в select, если элемент существует
+            const wpSelect = document.getElementById('wallpaper-select');
+            if (wpSelect) {
+                wpSelect.value = savedWallpaper;
+            }
+            
             updateThemeIcon(savedTheme);
+
             const container = document.getElementById('tpa-container');
             let html = '';
             
@@ -333,15 +341,15 @@
                             <input type="number" class="calc-input" data-idx="${index}" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">
                         </div>
                     </div>
-                </div>`;
-            });
+                </div>`;            });
             container.innerHTML = html;
             
             loadData();
             
-            container.addEventListener('input', () => {
+            container.addEventListener('input', function() {
                 calculateAll();
-                saveData();            });
+                saveData();
+            });
             
             calculateAll();
         }
@@ -355,7 +363,10 @@
         }
 
         function updateThemeIcon(theme) {
-            document.getElementById('theme-btn').textContent = theme === 'light' ? '🌙' : '☀️';
+            const btn = document.getElementById('theme-btn');
+            if (btn) {
+                btn.textContent = theme === 'light' ? '🌙' : '☀️';
+            }
         }
 
         function changeWallpaper(val) {
@@ -379,8 +390,7 @@
             const saved = localStorage.getItem('tpa_calc_data');
             if (saved) {
                 const dataToSave = JSON.parse(saved);
-                const inputs = document.querySelectorAll('.calc-input');
-                inputs.forEach(input => {
+                const inputs = document.querySelectorAll('.calc-input');                inputs.forEach(input => {
                     const idx = input.dataset.idx;
                     const field = input.dataset.field;
                     if (dataToSave[idx] && dataToSave[idx][field] !== undefined) {
@@ -390,7 +400,8 @@
             }
         }
 
-        function calculateAll() {            const inputs = document.querySelectorAll('.calc-input');
+        function calculateAll() {
+            const inputs = document.querySelectorAll('.calc-input');
             const data = {};
             
             tpaList.forEach((tpa, index) => {
@@ -423,28 +434,29 @@
                 const defectWeightKg = (defectParts * d.weight) / 1000;
                 const totalWeightKg = goodWeightKg + defectWeightKg;
 
-                const resEl = document.getElementById(`res-${index}`);
-                if (goodParts > 0 || defectParts > 0) {
-                    let miniHtml = `<div class="good">Гот: ${goodParts} шт</div>`;
-                    if (defectParts > 0) {
-                        miniHtml += `<div class="defect">Брак: ${defectParts} шт</div>`;
+                const resEl = document.getElementById('res-' + index);
+                if (resEl) {
+                    if (goodParts > 0 || defectParts > 0) {
+                        let miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
+                        if (defectParts > 0) {
+                            miniHtml += '<div class="defect">Брак: ' + defectParts + ' шт</div>';                        }
+                        resEl.innerHTML = miniHtml;
+                        hasData = true;
+                    } else {
+                        resEl.innerHTML = '<div class="good">0 шт</div>';
                     }
-                    resEl.innerHTML = miniHtml;
-                    hasData = true;
-                } else {
-                    resEl.innerHTML = `<div class="good">0 шт</div>`;
                 }
 
                 if (goodParts > 0 || defectParts > 0) {
-                    summaryHtml += `
-                    <div class="summary-item">
-                        <div class="summary-tpa">${tpa}</div>
-                        <div class="summary-data">                            <div class="parts">Гот: ${goodParts} шт | Брак: ${defectParts} шт</div>
-                            <div class="weight-good">Вес готовых: ${goodWeightKg.toFixed(3)} кг</div>
-                            <div class="weight-defect">Вес брака: ${defectWeightKg.toFixed(3)} кг</div>
-                            <div class="weight-total">Общий вес: ${totalWeightKg.toFixed(3)} кг</div>
-                        </div>
-                    </div>`;
+                    summaryHtml += '<div class="summary-item">' +
+                        '<div class="summary-tpa">' + tpa + '</div>' +
+                        '<div class="summary-data">' +
+                            '<div class="parts">Гот: ' + goodParts + ' шт | Брак: ' + defectParts + ' шт</div>' +
+                            '<div class="weight-good">Вес готовых: ' + goodWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="weight-defect">Вес брака: ' + defectWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="weight-total">Общий вес: ' + totalWeightKg.toFixed(3) + ' кг</div>' +
+                        '</div>' +
+                    '</div>';
 
                     if (!materialTotals[d.mat]) {
                         materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
@@ -456,43 +468,33 @@
             });
 
             const summaryContainer = document.getElementById('summary-container');
-            if (hasData) {
-                let matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью:</div>';
-                for (const [mat, stats] of Object.entries(materialTotals)) {
-                    matSummaryHtml += `
-                    <div class="summary-item material-item">
-                        <div class="summary-tpa">${mat}</div>
-                        <div class="summary-data">
-                            <div class="parts">${stats.totalWeight.toFixed(3)} кг всего</div>
-                            <div class="weight-good">Готовые: ${stats.goodWeight.toFixed(3)} кг</div>
-                            <div class="weight-defect">Брак: ${stats.defectWeight.toFixed(3)} кг</div>
-                        </div>
-                    </div>`;
+            if (summaryContainer) {
+                if (hasData) {
+                    let matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью:</div>';
+                    for (const mat in materialTotals) {
+                        const stats = materialTotals[mat];
+                        matSummaryHtml += '<div class="summary-item material-item">' +
+                            '<div class="summary-tpa">' + mat + '</div>' +
+                            '<div class="summary-data">' +
+                                '<div class="parts">' + stats.totalWeight.toFixed(3) + ' кг всего</div>' +
+                                '<div class="weight-good">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
+                                '<div class="weight-defect">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
+                            '</div>' +
+                        '</div>';
+                    }
+                    summaryHtml += matSummaryHtml;
+                    summaryContainer.innerHTML = summaryHtml;
+                } else {
+                    summaryContainer.innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
                 }
-                summaryHtml += matSummaryHtml;
-                summaryContainer.innerHTML = summaryHtml;
-            } else {
-                summaryContainer.innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
             }
         }
-
         function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(function(el) {
+                el.classList.remove('active');
+            });
             
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            const btns = document.querySelectorAll('.tab-btn');
-            if (tabName === 'calc') {
-                btns[0].classList.add('active');
-            } else {
-                btns[1].classList.add('active');
-                calculateAll();
-            }
-        }
-        function resetAll() {
-            if(confirm('Очистить все введенные данные? Настройки темы и фона останутся.')) {
-                document.querySelectorAll('.calc-input').forEach(input => {
-                    if (input.tagName === 'SELECT') input.selectedIndex = 0;
-                    else input.value = '';
-                });
-                localSto
+            document.getElementByI
