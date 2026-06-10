@@ -15,6 +15,7 @@
             --primary-dark: #2563eb;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
@@ -28,6 +29,7 @@
             --primary-dark: #3b82f6;
             --success: #34d399;
             --danger: #f87171;
+            --warning: #fbbf24;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
         }
 
@@ -45,9 +47,9 @@
             background: linear-gradient(120deg, #1e1b4b 0%, #312e81 100%); 
         }
         
-        [data-wallpaper="3"] body { 
-            background: radial-gradient(circle at 10% 20%, rgb(239, 246, 255) 0%, rgb(219, 228, 255) 90%); 
-        }        [data-theme="dark"][data-wallpaper="3"] body { 
+        [data-wallpaper="3"] body {             background: radial-gradient(circle at 10% 20%, rgb(239, 246, 255) 0%, rgb(219, 228, 255) 90%); 
+        }
+        [data-theme="dark"][data-wallpaper="3"] body { 
             background: radial-gradient(circle at 10% 20%, #1e293b 0%, #0f172a 90%); 
         }
 
@@ -95,8 +97,8 @@
             color: var(--text);
             font-size: 0.9rem;
         }
-
-        .tabs {            display: flex;
+        .tabs {
+            display: flex;
             background: var(--card);
             box-shadow: var(--shadow);
         }
@@ -143,9 +145,9 @@
             color: var(--primary-dark);
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 2px solid var(--border);
-            display: flex;
-            justify-content: space-between;            align-items: center;
+            border-bottom: 2px solid var(--border);            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .tpa-mini-result {
@@ -157,6 +159,7 @@
 
         .tpa-mini-result .good { color: var(--success); }
         .tpa-mini-result .defect { color: var(--danger); }
+        .tpa-mini-result .batch { color: var(--warning); }
 
         .form-row {
             display: grid;
@@ -191,18 +194,56 @@
             background: var(--card);
         }
 
-        .input-defect {
-            border-color: #fca5a5 !important;
+        .input-defect {            border-color: #fca5a5 !important;
             background-color: rgba(239, 68, 68, 0.05) !important;
         }
+
         .input-defect:focus { border-color: var(--danger) !important; }
+
+        .input-batch {
+            border-color: #fcd34d !important;
+            background-color: rgba(245, 158, 11, 0.05) !important;
+        }
+
+        .input-batch:focus { border-color: var(--warning) !important; }
+
+        .batch-section {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .batch-info {
+            font-size: 0.85rem;
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .add-batch-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .add-batch-btn:active {
+            transform: scale(0.98);
+        }
 
         .summary-list {
             background: var(--card);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
+            border: 1px solid var(--border);            margin-bottom: 20px;
             box-shadow: var(--shadow);
         }
 
@@ -232,6 +273,7 @@
         .summary-data .weight-good { color: var(--success); font-weight: 600; }
         .summary-data .weight-defect { color: var(--danger); font-weight: 600; }
         .summary-data .weight-total { color: var(--text-secondary); font-size: 0.8rem; }
+        .summary-data .batch-info { color: var(--warning); font-weight: 600; }
         
         .material-summary-header {
             padding: 12px 14px;
@@ -243,14 +285,14 @@
         }
 
         .material-item { background: rgba(16, 185, 129, 0.05); }
-        .material-item .summary-tpa { color: var(--success); }        .material-item .parts { color: var(--success); font-size: 0.95rem; }
+        .material-item .summary-tpa { color: var(--success); }
+        .material-item .parts { color: var(--success); font-size: 0.95rem; }
 
         .empty-hint {
             text-align: center;
             color: var(--text-secondary);
             padding: 30px 20px;
-            font-style: italic;
-            background: var(--card);
+            font-style: italic;            background: var(--card);
             border-radius: 12px;
             border: 1px solid var(--border);
         }
@@ -292,14 +334,14 @@
 
         .share-btn:active {
             transform: scale(0.98);
-        }    </style>
+        }
+    </style>
 </head>
 <body>
 
     <div class="top-controls">
         <select id="wallpaper-select" class="compact-select">
-            <option value="1">🎨 Фон: Спокойный</option>
-            <option value="2">🌈 Фон: Яркий</option>
+            <option value="1">🎨 Фон: Спокойный</option>            <option value="2">🌈 Фон: Яркий</option>
             <option value="3">🌌 Фон: Глубокий</option>
         </select>
         <button class="icon-btn" id="theme-btn">🌙</button>
@@ -307,7 +349,7 @@
 
     <div class="tabs">
         <button class="tab-btn active" id="tab-btn-calc">🧮 Калькулятор</button>
-        <button class="tab-btn" id="tab-btn-setup"> Для наладчика</button>
+        <button class="tab-btn" id="tab-btn-setup">🔧 Для наладчика</button>
     </div>
 
     <div class="container">
@@ -393,6 +435,14 @@
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">' +
                         '</div>' +
                     '</div>' +
+                    '<div class="batch-section">' +
+                        '<div class="batch-info" id="batch-info-' + i + '">Партия: 0 шт / 0.000 кг</div>' +
+                        '<div class="form-group full-width">' +
+                            '<label style="color: var(--warning);">Всего за партию (шт)</label>' +
+                            '<input type="number" class="calc-input input-batch" data-idx="' + i + '" data-field="batchTotal" inputmode="numeric" placeholder="0">' +
+                        '</div>' +
+                        '<button class="add-batch-btn" data-idx="' + i + '">➕ Добавить смену к партии</button>' +
+                    '</div>' +
                 '</div>';
             }
             container.innerHTML = html;
@@ -407,6 +457,13 @@
                 });
             }
             
+            var addBatchBtns = document.querySelectorAll('.add-batch-btn');
+            for (var m = 0; m < addBatchBtns.length; m++) {
+                addBatchBtns[m].addEventListener('click', function() {
+                    var idx = this.getAttribute('data-idx');
+                    addToBatch(idx);                });
+            }
+            
             var themeBtn = document.getElementById('theme-btn');
             if (themeBtn) {
                 themeBtn.addEventListener('click', toggleTheme);
@@ -419,7 +476,8 @@
             
             var shareBtn = document.getElementById('share-btn');
             if (shareBtn) {
-                shareBtn.addEventListener('click', shareReport);            }
+                shareBtn.addEventListener('click', shareReport);
+            }
             
             var tabBtnCalc = document.getElementById('tab-btn-calc');
             var tabBtnSetup = document.getElementById('tab-btn-setup');
@@ -435,6 +493,38 @@
             }
             
             calculateAll();
+        }
+
+        function addToBatch(idx) {
+            var inputs = document.querySelectorAll('.calc-input');
+            var perBox = 0;
+            var boxes = 0;
+            
+            for (var i = 0; i < inputs.length; i++) {
+                var input = inputs[i];
+                var inputIdx = input.getAttribute('data-idx');
+                var field = input.getAttribute('data-field');
+                
+                if (inputIdx === idx) {
+                    if (field === 'perBox') {
+                        perBox = parseFloat(input.value) || 0;
+                    } else if (field === 'boxes') {
+                        boxes = parseFloat(input.value) || 0;
+                    } else if (field === 'batchTotal') {                        var currentBatch = parseFloat(input.value) || 0;
+                        var shiftAmount = perBox * boxes;
+                        
+                        if (shiftAmount > 0) {
+                            input.value = currentBatch + shiftAmount;
+                            calculateAll();
+                            saveData();
+                            alert('✅ Добавлено ' + shiftAmount + ' шт к партии!');
+                        } else {
+                            alert('⚠️ Сначала введите количество готовых деталей за смену (шт. в кор. × кол-во кор.)');
+                        }
+                        return;
+                    }
+                }
+            }
         }
 
         function toggleTheme() {
@@ -496,7 +586,8 @@
                     perBox: 0, 
                     boxes: 0, 
                     weight: 0, 
-                    defect: 0 
+                    defect: 0,
+                    batchTotal: 0
                 };
             }
 
@@ -523,12 +614,16 @@
                 
                 var goodParts = d.perBox * d.boxes;
                 var defectParts = d.defect;
+                var batchParts = d.batchTotal;
                 
                 var goodWeightKg = (goodParts * d.weight) / 1000;
                 var defectWeightKg = (defectParts * d.weight) / 1000;
                 var totalWeightKg = goodWeightKg + defectWeightKg;
+                var batchWeightKg = (batchParts * d.weight) / 1000;
 
                 var resEl = document.getElementById('res-' + k);
+                var batchInfoEl = document.getElementById('batch-info-' + k);
+                
                 if (resEl) {
                     if (goodParts > 0 || defectParts > 0) {
                         var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
@@ -541,8 +636,12 @@
                         resEl.innerHTML = '<div class="good">0 шт</div>';
                     }
                 }
+                
+                if (batchInfoEl) {
+                    batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + batchWeightKg.toFixed(3) + ' кг';
+                }
 
-                if (goodParts > 0 || defectParts > 0) {
+                if (goodParts > 0 || defectParts > 0 || batchParts > 0) {
                     summaryHtml += '<div class="summary-item">' +
                         '<div class="summary-tpa">' + tpa + '</div>' +
                         '<div class="summary-data">' +
@@ -550,15 +649,16 @@
                             '<div class="weight-good">Вес готовых: ' + goodWeightKg.toFixed(3) + ' кг</div>' +
                             '<div class="weight-defect">Вес брака: ' + defectWeightKg.toFixed(3) + ' кг</div>' +
                             '<div class="weight-total">Общий вес: ' + totalWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="batch-info">📦 Партия: ' + batchParts + ' шт / ' + batchWeightKg.toFixed(3) + ' кг</div>' +
                         '</div>' +
                     '</div>';
 
                     if (!materialTotals[d.mat]) {
-                        materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
+                        materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0, batchWeight: 0 };
                     }
                     materialTotals[d.mat].totalWeight += totalWeightKg;
-                    materialTotals[d.mat].goodWeight += goodWeightKg;
-                    materialTotals[d.mat].defectWeight += defectWeightKg;
+                    materialTotals[d.mat].goodWeight += goodWeightKg;                    materialTotals[d.mat].defectWeight += defectWeightKg;
+                    materialTotals[d.mat].batchWeight += batchWeightKg;
                 }
             }
 
@@ -566,7 +666,8 @@
             var shareBtn = document.getElementById('share-btn');
             
             if (summaryContainer) {
-                if (hasData) {                    var matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью:</div>';
+                if (hasData) {
+                    var matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью:</div>';
                     for (var mat in materialTotals) {
                         if (materialTotals.hasOwnProperty(mat)) {
                             var stats = materialTotals[mat];
@@ -576,6 +677,7 @@
                                     '<div class="parts">' + stats.totalWeight.toFixed(3) + ' кг всего</div>' +
                                     '<div class="weight-good">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
                                     '<div class="weight-defect">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
+                                    '<div class="batch-info">Партия: ' + stats.batchWeight.toFixed(3) + ' кг</div>' +
                                 '</div>' +
                             '</div>';
                         }
@@ -604,10 +706,10 @@
                 data[i] = { 
                     name: TPA_LIST[i], 
                     mat: 'Не выбрано', 
-                    perBox: 0, 
-                    boxes: 0, 
+                    perBox: 0,                     boxes: 0, 
                     weight: 0, 
-                    defect: 0 
+                    defect: 0,
+                    batchTotal: 0
                 };
             }
 
@@ -615,7 +717,8 @@
                 var input = inputs[j];
                 var idx = input.getAttribute('data-idx');
                 var field = input.getAttribute('data-field');
-                if (field === 'mat') {                    data[idx].mat = input.value;
+                if (field === 'mat') {
+                    data[idx].mat = input.value;
                 } else {
                     var val = parseFloat(input.value);
                     if (!isNaN(val) && val >= 0) {
@@ -627,7 +730,7 @@
             var now = new Date();
             var dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
             
-            var report = ' ОТЧЁТ ТПА\n';
+            var report = '📊 ОТЧЁТ ТПА\n';
             report += '📅 Дата: ' + dateStr + '\n';
             report += '━━━━━━━━━━━━━━━━━━━━\n\n';
             
@@ -639,24 +742,29 @@
                 
                 var goodParts = d.perBox * d.boxes;
                 var defectParts = d.defect;
+                var batchParts = d.batchTotal;
                 
-                if (goodParts > 0 || defectParts > 0) {
+                if (goodParts > 0 || defectParts > 0 || batchParts > 0) {
                     var goodWeightKg = (goodParts * d.weight) / 1000;
                     var defectWeightKg = (defectParts * d.weight) / 1000;
+                    var batchWeightKg = (batchParts * d.weight) / 1000;
                     
-                    report += ' ' + tpa + ' (' + d.mat + ')\n';
+                    report += '🏭 ' + tpa + ' (' + d.mat + ')\n';
                     report += '   ✅ Готовые: ' + goodParts + ' шт (' + goodWeightKg.toFixed(3) + ' кг)\n';
                     if (defectParts > 0) {
-                        report += '    Брак: ' + defectParts + ' шт (' + defectWeightKg.toFixed(3) + ' кг)\n';
+                        report += '   ❌ Брак: ' + defectParts + ' шт (' + defectWeightKg.toFixed(3) + ' кг)\n';
                     }
+                    if (batchParts > 0) {
+                        report += '   📦 Партия: ' + batchParts + ' шт (' + batchWeightKg.toFixed(3) + ' кг)\n';                    }
                     report += '\n';
                     
                     if (!materialTotals[d.mat]) {
-                        materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
+                        materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0, batchWeight: 0 };
                     }
                     materialTotals[d.mat].totalWeight += (goodWeightKg + defectWeightKg);
                     materialTotals[d.mat].goodWeight += goodWeightKg;
                     materialTotals[d.mat].defectWeight += defectWeightKg;
+                    materialTotals[d.mat].batchWeight += batchWeightKg;
                 }
             }
             
@@ -664,12 +772,16 @@
             report += '📦 ИТОГО ПО СЫРЬЮ:\n\n';
             
             for (var mat in materialTotals) {
-                if (materialTotals.hasOwnProperty(mat)) {                    var stats = materialTotals[mat];
-                    report += ' ' + mat + '\n';
+                if (materialTotals.hasOwnProperty(mat)) {
+                    var stats = materialTotals[mat];
+                    report += '🔹 ' + mat + '\n';
                     report += '   Всего: ' + stats.totalWeight.toFixed(3) + ' кг\n';
                     report += '   Готовые: ' + stats.goodWeight.toFixed(3) + ' кг\n';
                     if (stats.defectWeight > 0) {
                         report += '   Брак: ' + stats.defectWeight.toFixed(3) + ' кг\n';
+                    }
+                    if (stats.batchWeight > 0) {
+                        report += '   Партия: ' + stats.batchWeight.toFixed(3) + ' кг\n';
                     }
                     report += '\n';
                 }
@@ -678,60 +790,4 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'Отчёт ТПА',
-                    text: report
-                }).catch(function(err) {
-                    console.log('Ошибка при отправке:', err);
-                });
-            } else {
-                navigator.clipboard.writeText(report).then(function() {
-                    alert('✅ Отчёт скопирован в буфер обмена! Теперь можешь вставить его в WhatsApp, Telegram или любой другой мессенджер.');
-                }).catch(function() {
-                    alert(' Не удалось скопировать. Попробуй вручную выделить текст.');
-                });
-            }
-        }
-
-        function switchTab(tabName) {
-            var tabContents = document.querySelectorAll('.tab-content');
-            var tabBtns = document.querySelectorAll('.tab-btn');
-            
-            for (var i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove('active');
-            }
-            for (var j = 0; j < tabBtns.length; j++) {
-                tabBtns[j].classList.remove('active');
-            }
-            
-            document.getElementById('tab-' + tabName).classList.add('active');
-            
-            if (tabName === 'calc') {
-                document.getElementById('tab-btn-calc').classList.add('active');
-            } else {
-                document.getElementById('tab-btn-setup').classList.add('active');
-                calculateAll();
-            }
-        }
-
-        function resetAll() {
-            if(confirm('Очистить все введенные данные? Настройки темы и фона останутся.')) {                var inputs = document.querySelectorAll('.calc-input');
-                for (var i = 0; i < inputs.length; i++) {
-                    var input = inputs[i];
-                    if (input.tagName === 'SELECT') {
-                        input.selectedIndex = 0;
-                    } else {
-                        input.value = '';
-                    }
-                }
-                localStorage.removeItem('tpa_calc_data');
-                calculateAll();
-            }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-    </script>
-</body>
-</html>
+                    
