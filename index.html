@@ -235,17 +235,15 @@
             margin-top: 8px;
         }
 
-        .add-batch-btn:active {
-            transform: scale(0.98);
-        }
+        .add-batch-btn:active { transform: scale(0.98); }
 
         .summary-list {
             background: var(--card);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--border);            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);        }
 
         .summary-item {
             display: flex;
@@ -292,9 +290,9 @@
             text-align: center;
             color: var(--text-secondary);
             padding: 30px 20px;
-            font-style: italic;            background: var(--card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
+            font-style: italic;
+            background: var(--card);
+            border-radius: 12px;            border: 1px solid var(--border);
         }
 
         .reset-btn {
@@ -328,27 +326,22 @@
             display: none;
         }
 
-        .share-btn.visible {
-            display: block;
-        }
-
-        .share-btn:active {
-            transform: scale(0.98);
-        }
+        .share-btn.visible { display: block; }
+        .share-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
     <div class="top-controls">
         <select id="wallpaper-select" class="compact-select">
-            <option value="1">🎨 Фон: Спокойный</option>            <option value="2">🌈 Фон: Яркий</option>
+            <option value="1"> Фон: Спокойный</option>
+            <option value="2">🌈 Фон: Яркий</option>
             <option value="3">🌌 Фон: Глубокий</option>
         </select>
         <button class="icon-btn" id="theme-btn">🌙</button>
     </div>
 
-    <div class="tabs">
-        <button class="tab-btn active" id="tab-btn-calc">🧮 Калькулятор</button>
+    <div class="tabs">        <button class="tab-btn active" id="tab-btn-calc">🧮 Калькулятор</button>
         <button class="tab-btn" id="tab-btn-setup">🔧 Для наладчика</button>
     </div>
 
@@ -538,7 +531,7 @@
         function updateThemeIcon(theme) {
             var btn = document.getElementById('theme-btn');
             if (btn) {
-                btn.textContent = theme === 'light' ? '🌙' : '☀️';
+                btn.textContent = theme === 'light' ? '🌙' : '️';
             }
         }
 
@@ -574,8 +567,7 @@
                 }
             }
         }
-
-        function calculateAll() {
+function calculateAll() {
             var inputs = document.querySelectorAll('.calc-input');
             var data = {};
             
@@ -608,6 +600,7 @@
             var summaryHtml = '';
             var hasData = false;
             var materialTotals = {};
+
             for (var k = 0; k < TPA_LIST.length; k++) {
                 var tpa = TPA_LIST[k];
                 var d = data[k];
@@ -623,8 +616,7 @@
 
                 var resEl = document.getElementById('res-' + k);
                 var batchInfoEl = document.getElementById('batch-info-' + k);
-                
-                if (resEl) {
+                                if (resEl) {
                     if (goodParts > 0 || defectParts > 0) {
                         var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
                         if (defectParts > 0) {
@@ -657,7 +649,8 @@
                         materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0, batchWeight: 0 };
                     }
                     materialTotals[d.mat].totalWeight += totalWeightKg;
-                    materialTotals[d.mat].goodWeight += goodWeightKg;                    materialTotals[d.mat].defectWeight += defectWeightKg;
+                    materialTotals[d.mat].goodWeight += goodWeightKg;
+                    materialTotals[d.mat].defectWeight += defectWeightKg;
                     materialTotals[d.mat].batchWeight += batchWeightKg;
                 }
             }
@@ -672,8 +665,7 @@
                         if (materialTotals.hasOwnProperty(mat)) {
                             var stats = materialTotals[mat];
                             matSummaryHtml += '<div class="summary-item material-item">' +
-                                '<div class="summary-tpa">' + mat + '</div>' +
-                                '<div class="summary-data">' +
+                                '<div class="summary-tpa">' + mat + '</div>' +                                '<div class="summary-data">' +
                                     '<div class="parts">' + stats.totalWeight.toFixed(3) + ' кг всего</div>' +
                                     '<div class="weight-good">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
                                     '<div class="weight-defect">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
@@ -706,7 +698,8 @@
                 data[i] = { 
                     name: TPA_LIST[i], 
                     mat: 'Не выбрано', 
-                    perBox: 0,                     boxes: 0, 
+                    perBox: 0, 
+                    boxes: 0, 
                     weight: 0, 
                     defect: 0,
                     batchTotal: 0
@@ -721,8 +714,7 @@
                     data[idx].mat = input.value;
                 } else {
                     var val = parseFloat(input.value);
-                    if (!isNaN(val) && val >= 0) {
-                        data[idx][field] = val;
+                    if (!isNaN(val) && val >= 0) {                        data[idx][field] = val;
                     }
                 }
             }
@@ -755,7 +747,8 @@
                         report += '   ❌ Брак: ' + defectParts + ' шт (' + defectWeightKg.toFixed(3) + ' кг)\n';
                     }
                     if (batchParts > 0) {
-                        report += '   📦 Партия: ' + batchParts + ' шт (' + batchWeightKg.toFixed(3) + ' кг)\n';                    }
+                        report += '   📦 Партия: ' + batchParts + ' шт (' + batchWeightKg.toFixed(3) + ' кг)\n';
+                    }
                     report += '\n';
                     
                     if (!materialTotals[d.mat]) {
@@ -770,8 +763,7 @@
             
             report += '━━━━━━━━━━━━━━━━━━━━\n';
             report += '📦 ИТОГО ПО СЫРЬЮ:\n\n';
-            
-            for (var mat in materialTotals) {
+                        for (var mat in materialTotals) {
                 if (materialTotals.hasOwnProperty(mat)) {
                     var stats = materialTotals[mat];
                     report += '🔹 ' + mat + '\n';
@@ -790,4 +782,60 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'Отчёт ТПА',
-                    
+                    text: report
+                }).catch(function(err) {
+                    console.log('Ошибка при отправке:', err);
+                });
+            } else {
+                navigator.clipboard.writeText(report).then(function() {
+                    alert('✅ Отчёт скопирован в буфер обмена! Теперь можешь вставить его в WhatsApp, Telegram или любой другой мессенджер.');
+                }).catch(function() {
+                    alert('⚠️ Не удалось скопировать. Попробуй вручную выделить текст.');
+                });
+            }
+        }
+
+        function switchTab(tabName) {
+            var tabContents = document.querySelectorAll('.tab-content');
+            var tabBtns = document.querySelectorAll('.tab-btn');
+            
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            for (var j = 0; j < tabBtns.length; j++) {
+                tabBtns[j].classList.remove('active');
+            }
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            if (tabName === 'calc') {
+                document.getElementById('tab-btn-calc').classList.add('active');
+            } else {
+                document.getElementById('tab-btn-setup').classList.add('active');
+                calculateAll();            }
+        }
+
+        function resetAll() {
+            if(confirm('Очистить все введенные данные? Настройки темы и фона останутся.')) {
+                var inputs = document.querySelectorAll('.calc-input');
+                for (var i = 0; i < inputs.length; i++) {
+                    var input = inputs[i];
+                    if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
+                    } else {
+                        input.value = '';
+                    }
+                }
+                localStorage.removeItem('tpa_calc_data');
+                calculateAll();
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
