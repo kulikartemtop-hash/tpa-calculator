@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light" data-wallpaper="1">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,17 +7,19 @@
     <style>
         /* Фирменные цвета */
         :root {
-            --brand-primary: #ff5722; /* Оранжевый */
-            --brand-accent: #3f51b5; /* Темно-синий */
+            --brand-primary: #FF5722; /* Оранжевый */
+            --brand-accent: #3F51B5; /* Темно-синий */
             --brand-text: #212121;
-            --brand-light: #ffffff;
-            --brand-border: #e0e0e0;
+            --brand-light: #FFFFFF;
+            --brand-gray: #EFEFEF;
+            --brand-border: #DCDCDC;
         }
 
         /* Темная тема */
         [data-theme="dark"] {
-            --brand-text: #fff;
+            --brand-text: #FFF;
             --brand-light: #212121;
+            --brand-gray: #424242;
             --brand-border: #424242;
         }
 
@@ -38,7 +40,10 @@
             background: var(--brand-primary);
             color: var(--brand-light);
             padding: 12px;
-            text-align: center;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         header img {
             height: 32px;
@@ -164,17 +169,17 @@
             margin-top: 8px;
         }
         .add-batch-btn {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, #e64a19 100%);
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #E64A19 100%);
             color: white;
         }
         .reset-btn {
-            background: linear-gradient(135deg, var(--brand-danger) 0%, #dd2c00 100%);
+            background: linear-gradient(135deg, var(--brand-danger) 0%, #DD2C00 100%);
             color: white;
             margin-top: 20px;
             margin-bottom: 40px;
         }
         .share-btn {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, #e64a19 100%);
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #E64A19 100%);
             color: white;
             margin-top: 20px;
             margin-bottom: 20px;
@@ -240,12 +245,12 @@
             align-items: center;
             margin-bottom: 10px;
         }
-        .final-report-material:last-of-type { margin-bottom: 0; }
+        .final-report-material:last-of-type { margin-bottom:0; }
     </style>
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Логотип"> <!-- Поставьте сюда свой логотип -->
+        <img alt="Логотип" id="019ecfbd-7411-7c7b-8033-13d5983e5f98"> <!-- Поставьте сюда свой логотип -->
         <h1>Калькулятор ТПА</h1>
     </header>
 
@@ -284,36 +289,40 @@
 
     <script>
 const TPA_LIST = [
-    "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6", "ТПА 7", "ТПА 8", "ТПА 9", "ТПА 10", "ТПА 11", "ТПА 12", "ТПА 13", "Малыш"
+    "ТПА 1 (ПВХ серый)",
+    "ТПА 2 (ПВХ коричневый)",
+    "ТПА 3 (АБС)",
+    "ТПА 4 (PP)",
+    "ТПА 5 (ПВХ серый)",
+    "ТПА 6 (ПВХ коричневый)",
+    "ТПА 7 (АБС)",
+    "ТПА 8 (PP)",
+    "ТПА 9 (ПВХ серый)",
+    "ТПА 10 (ПВХ коричневый)",
+    "ТПА 11 (АБС)",
+    "ТПА 12 (PP)",
+    "ТПА 13 (ПВХ серый)",
+    "Малыш (ПП)"
 ];
-const MATERIALS = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
 function init() {
     const container = document.getElementById("tpa-container");
     let html = "";
 
     for (const [i, tpa] of TPA_LIST.entries()) {
+        const [name, material] = tpa.split(" (");
+        const matShort = material.slice(0, -1); // Убираем скобку
+
         html += `
-            <div class="tpa-card" data-tpa="${tpa}">
+            <div class="tpa-card" data-name="${name}">
                 <div class="tpa-header">
-                    <span>${tpa}</span>
+                    <span>${name}</span>
                     <div class="tpa-mini-result" id="res-${i}">
                         <div class="good">0 шт</div>
                     </div>
                 </div>
 
-                <!-- Выбор материала -->
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Сырье</label>
-                        <select class="calc-input" data-idx="${i}" data-field="mat">
-                            <option value="">Выберите...</option>
-                            ${MATERIALS.map(m => `<option value="${m}">${m}</option>`).join("\n")}
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Готовая продукция за смену -->
+                <!-- Форма для ввода -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>Деталей в коробке (шт)</label>
@@ -325,7 +334,6 @@ function init() {
                     </div>
                 </div>
 
-                <!-- Брак -->
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label>Брак за смену (шт)</label>
@@ -333,7 +341,6 @@ function init() {
                     </div>
                 </div>
 
-                <!-- Вес детали -->
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label>Вес 1 детали (г)</label>
@@ -341,7 +348,6 @@ function init() {
                     </div>
                 </div>
 
-                <!-- Накопленная партия -->
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label>Накопленная партия (шт)</label>
@@ -387,47 +393,48 @@ function init() {
     loadData();
     calculateAll();
 }
-        function calculateAll() {
-            const data = collectData();
 
-            // 1. Генерируем отчет для вкладки "Для наладчика" (только смена)
-            generateOnShiftReport(data);
+function calculateAll() {
+    const data = collectData();
 
-            // 2. Генерируем отчет для вкладки "Калькулятор" (всё сразу)
-            generateFullReport(data);
+    // 1. Генерируем отчет для вкладки "Для наладчика" (только смена)
+    generateOnShiftReport(data);
 
-            // 3. Генерируем итоговую сводку по материалам
-            generateFinalReport(data);
+    // 2. Генерируем отчет для вкладки "Калькулятор" (всё сразу)
+    generateFullReport(data);
+
+    // 3. Генерируем итоговую сводку по материалам
+    generateFinalReport(data);
+}
+
+function collectData() {
+    const inputs = document.querySelectorAll(".calc-input");
+    const data = {};
+    TPA_LIST.forEach((_, i) => {
+        data[i] = {
+            name: "",
+            mat: "",
+            perBox: 0,
+            boxes: 0,
+            defect: 0,
+            weight: 0,
+            batchTotal: 0
+        };
+    });
+
+    inputs.forEach(input => {
+        const idx = input.dataset.idx;
+        const field = input.dataset.field;
+        const val = parseFloat(input.value) || 0;
+
+        if (field === "mat") {
+            data[idx][field] = input.value;
+        } else {
+            data[idx][field] = val;
         }
-
-        function collectData() {
-            const inputs = document.querySelectorAll(".calc-input");
-            const data = {};
-            TPA_LIST.forEach((_, i) => {
-                data[i] = {
-                    name: TPA_LIST[i],
-                    mat: "", // Сырье
-                    perBox: 0, // Деталей в коробке
-                    boxes: 0, // Коробок за смену
-                    defect: 0, // Брак
-                    weight: 0, // Вес детали
-                    batchTotal: 0 // Накопленная партия
-                };
-            });
- inputs.forEach(input => {
-                const idx = input.dataset.idx;
-                const field = input.dataset.field;
-                const val = parseFloat(input.value) || 0;
-
-                if (field === "mat") {
-                    data[idx][field] = input.value;
-                } else {
-                    data[idx][field] = val;
-                }
-            });
-            return data;
-        }
-
+    });
+    return data;
+}
         function generateOnShiftReport(data) {
             const summaryContainer = document.getElementById(
                 "on-setup-summary-container"
@@ -438,7 +445,7 @@ function init() {
             for (const key in data) {
                 const d = data[key];
                 const goodParts = d.perBox * d.boxes;
-                const weightKg = (goodParts * d.weight) / 1000;
+                const weightKg = (goodParts * d.weight) /1000;
 
                 if (goodParts > 0) {
                     hasData = true;
@@ -448,6 +455,10 @@ function init() {
                             <div class="summary-data">
                                 <div>Готовая продукция: ${goodParts.toFixed(0)} шт</div>
                                 <div>Вес: ${weightKg.toFixed(3)} кг</div>
+                                <div>Брак: ${d.defect.toFixed(0)} шт</div>
+                                <div>Вес брака: ${(d.defect * d.weight / 1000).toFixed(3)} кг</div>
+                                <div>Партия: ${(d.batchTotal + goodParts).toFixed(0)} шт</div>
+                                <div>Вес партии: ${((d.batchTotal + goodParts) * d.weight / 1000).toFixed(3)} кг</div>
                             </div>
                         </div>
                     `;
@@ -635,8 +646,7 @@ function init() {
             }
         }
 
-        // Инициализация
-        if (document.readyState === "loading") {
+        // Инициализация if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", init);
         } else {
             init();
