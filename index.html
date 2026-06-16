@@ -222,28 +222,14 @@
             margin-bottom: 8px;
         }
 
-        .add-batch-btn {
-            width: 100%;
-            padding: 10px;
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        .add-batch-btn:active { transform: scale(0.98); }
-
         .summary-list {
             background: var(--card);
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border);
             margin-bottom: 20px;
-            box-shadow: var(--shadow);        }
+            box-shadow: var(--shadow);
+        }
 
         .summary-item {
             display: flex;
@@ -257,8 +243,7 @@
         
         .summary-tpa {
             font-weight: 700;
-            color: var(--primary-dark);
-            min-width: 80px;
+            color: var(--primary-dark);            min-width: 80px;
         }
 
         .summary-data {
@@ -292,7 +277,8 @@
             padding: 30px 20px;
             font-style: italic;
             background: var(--card);
-            border-radius: 12px;            border: 1px solid var(--border);
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
         .reset-btn {
@@ -306,8 +292,7 @@
             font-weight: 600;
             margin-top: 20px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
-            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);            cursor: pointer;
         }
 
         .share-btn {
@@ -334,14 +319,15 @@
 
     <div class="top-controls">
         <select id="wallpaper-select" class="compact-select">
-            <option value="1"> Фон: Спокойный</option>
+            <option value="1">🎨 Фон: Спокойный</option>
             <option value="2">🌈 Фон: Яркий</option>
             <option value="3">🌌 Фон: Глубокий</option>
         </select>
         <button class="icon-btn" id="theme-btn">🌙</button>
     </div>
 
-    <div class="tabs">        <button class="tab-btn active" id="tab-btn-calc">🧮 Калькулятор</button>
+    <div class="tabs">
+        <button class="tab-btn active" id="tab-btn-calc">🧮 Калькулятор</button>
         <button class="tab-btn" id="tab-btn-setup">🔧 Для наладчика</button>
     </div>
 
@@ -434,7 +420,6 @@
                             '<label style="color: var(--warning);">Всего за партию (шт)</label>' +
                             '<input type="number" class="calc-input input-batch" data-idx="' + i + '" data-field="batchTotal" inputmode="numeric" placeholder="0">' +
                         '</div>' +
-                        '<button class="add-batch-btn" data-idx="' + i + '">➕ Добавить смену к партии</button>' +
                     '</div>' +
                 '</div>';
             }
@@ -450,20 +435,12 @@
                 });
             }
             
-            var addBatchBtns = document.querySelectorAll('.add-batch-btn');
-            for (var m = 0; m < addBatchBtns.length; m++) {
-                addBatchBtns[m].addEventListener('click', function() {
-                    var idx = this.getAttribute('data-idx');
-                    addToBatch(idx);                });
-            }
-            
             var themeBtn = document.getElementById('theme-btn');
             if (themeBtn) {
                 themeBtn.addEventListener('click', toggleTheme);
             }
             
-            var resetBtn = document.getElementById('reset-btn');
-            if (resetBtn) {
+            var resetBtn = document.getElementById('reset-btn');            if (resetBtn) {
                 resetBtn.addEventListener('click', resetAll);
             }
             
@@ -488,38 +465,6 @@
             calculateAll();
         }
 
-        function addToBatch(idx) {
-            var inputs = document.querySelectorAll('.calc-input');
-            var perBox = 0;
-            var boxes = 0;
-            
-            for (var i = 0; i < inputs.length; i++) {
-                var input = inputs[i];
-                var inputIdx = input.getAttribute('data-idx');
-                var field = input.getAttribute('data-field');
-                
-                if (inputIdx === idx) {
-                    if (field === 'perBox') {
-                        perBox = parseFloat(input.value) || 0;
-                    } else if (field === 'boxes') {
-                        boxes = parseFloat(input.value) || 0;
-                    } else if (field === 'batchTotal') {                        var currentBatch = parseFloat(input.value) || 0;
-                        var shiftAmount = perBox * boxes;
-                        
-                        if (shiftAmount > 0) {
-                            input.value = currentBatch + shiftAmount;
-                            calculateAll();
-                            saveData();
-                            alert('✅ Добавлено ' + shiftAmount + ' шт к партии!');
-                        } else {
-                            alert('⚠️ Сначала введите количество готовых деталей за смену (шт. в кор. × кол-во кор.)');
-                        }
-                        return;
-                    }
-                }
-            }
-        }
-
         function toggleTheme() {
             var current = document.documentElement.getAttribute('data-theme');
             var next = current === 'light' ? 'dark' : 'light';
@@ -531,7 +476,7 @@
         function updateThemeIcon(theme) {
             var btn = document.getElementById('theme-btn');
             if (btn) {
-                btn.textContent = theme === 'light' ? '🌙' : '️';
+                btn.textContent = theme === 'light' ? '🌙' : '☀️';
             }
         }
 
@@ -544,14 +489,14 @@
             var inputs = document.querySelectorAll('.calc-input');
             var dataToSave = {};
             for (var i = 0; i < inputs.length; i++) {
-                var input = inputs[i];
-                var idx = input.getAttribute('data-idx');
+                var input = inputs[i];                var idx = input.getAttribute('data-idx');
                 var field = input.getAttribute('data-field');
                 if (!dataToSave[idx]) dataToSave[idx] = {};
                 dataToSave[idx][field] = input.value;
             }
             localStorage.setItem('tpa_calc_data', JSON.stringify(dataToSave));
         }
+
         function loadData() {
             var saved = localStorage.getItem('tpa_calc_data');
             if (saved) {
@@ -609,14 +554,17 @@ function calculateAll() {
                 var defectParts = d.defect;
                 var batchParts = d.batchTotal;
                 
+                // НОВАЯ ЛОГИКА: В вкладке "Для наладчика" партия = batchTotal + goodParts
+                var batchPartsToday = batchParts + goodParts;
+                
                 var goodWeightKg = (goodParts * d.weight) / 1000;
                 var defectWeightKg = (defectParts * d.weight) / 1000;
                 var totalWeightKg = goodWeightKg + defectWeightKg;
-                var batchWeightKg = (batchParts * d.weight) / 1000;
-
+                var batchWeightKg = (batchPartsToday * d.weight) / 1000;
                 var resEl = document.getElementById('res-' + k);
                 var batchInfoEl = document.getElementById('batch-info-' + k);
-                                if (resEl) {
+                
+                if (resEl) {
                     if (goodParts > 0 || defectParts > 0) {
                         var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
                         if (defectParts > 0) {
@@ -630,10 +578,10 @@ function calculateAll() {
                 }
                 
                 if (batchInfoEl) {
-                    batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + batchWeightKg.toFixed(3) + ' кг';
+                    batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + ((batchParts * d.weight) / 1000).toFixed(3) + ' кг';
                 }
 
-                if (goodParts > 0 || defectParts > 0 || batchParts > 0) {
+                if (goodParts > 0 || defectParts > 0 || batchPartsToday > 0) {
                     summaryHtml += '<div class="summary-item">' +
                         '<div class="summary-tpa">' + tpa + '</div>' +
                         '<div class="summary-data">' +
@@ -641,7 +589,7 @@ function calculateAll() {
                             '<div class="weight-good">Вес готовых: ' + goodWeightKg.toFixed(3) + ' кг</div>' +
                             '<div class="weight-defect">Вес брака: ' + defectWeightKg.toFixed(3) + ' кг</div>' +
                             '<div class="weight-total">Общий вес: ' + totalWeightKg.toFixed(3) + ' кг</div>' +
-                            '<div class="batch-info">📦 Партия: ' + batchParts + ' шт / ' + batchWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="batch-info">📦 Партия (вкл. смену): ' + batchPartsToday + ' шт / ' + batchWeightKg.toFixed(3) + ' кг</div>' +
                         '</div>' +
                     '</div>';
 
@@ -662,14 +610,14 @@ function calculateAll() {
                 if (hasData) {
                     var matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью:</div>';
                     for (var mat in materialTotals) {
-                        if (materialTotals.hasOwnProperty(mat)) {
-                            var stats = materialTotals[mat];
+                        if (materialTotals.hasOwnProperty(mat)) {                            var stats = materialTotals[mat];
                             matSummaryHtml += '<div class="summary-item material-item">' +
-                                '<div class="summary-tpa">' + mat + '</div>' +                                '<div class="summary-data">' +
+                                '<div class="summary-tpa">' + mat + '</div>' +
+                                '<div class="summary-data">' +
                                     '<div class="parts">' + stats.totalWeight.toFixed(3) + ' кг всего</div>' +
                                     '<div class="weight-good">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
                                     '<div class="weight-defect">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
-                                    '<div class="batch-info">Партия: ' + stats.batchWeight.toFixed(3) + ' кг</div>' +
+                                    '<div class="batch-info">Партия (вкл. смену): ' + stats.batchWeight.toFixed(3) + ' кг</div>' +
                                 '</div>' +
                             '</div>';
                         }
@@ -711,10 +659,10 @@ function calculateAll() {
                 var idx = input.getAttribute('data-idx');
                 var field = input.getAttribute('data-field');
                 if (field === 'mat') {
-                    data[idx].mat = input.value;
-                } else {
+                    data[idx].mat = input.value;                } else {
                     var val = parseFloat(input.value);
-                    if (!isNaN(val) && val >= 0) {                        data[idx][field] = val;
+                    if (!isNaN(val) && val >= 0) {
+                        data[idx][field] = val;
                     }
                 }
             }
@@ -735,19 +683,20 @@ function calculateAll() {
                 var goodParts = d.perBox * d.boxes;
                 var defectParts = d.defect;
                 var batchParts = d.batchTotal;
+                var batchPartsToday = batchParts + goodParts; // НОВАЯ ЛОГИКА
                 
-                if (goodParts > 0 || defectParts > 0 || batchParts > 0) {
+                if (goodParts > 0 || defectParts > 0 || batchPartsToday > 0) {
                     var goodWeightKg = (goodParts * d.weight) / 1000;
                     var defectWeightKg = (defectParts * d.weight) / 1000;
-                    var batchWeightKg = (batchParts * d.weight) / 1000;
+                    var batchWeightKg = (batchPartsToday * d.weight) / 1000; // НОВАЯ ЛОГИКА
                     
                     report += '🏭 ' + tpa + ' (' + d.mat + ')\n';
                     report += '   ✅ Готовые: ' + goodParts + ' шт (' + goodWeightKg.toFixed(3) + ' кг)\n';
                     if (defectParts > 0) {
                         report += '   ❌ Брак: ' + defectParts + ' шт (' + defectWeightKg.toFixed(3) + ' кг)\n';
                     }
-                    if (batchParts > 0) {
-                        report += '   📦 Партия: ' + batchParts + ' шт (' + batchWeightKg.toFixed(3) + ' кг)\n';
+                    if (batchPartsToday > 0) {
+                        report += '   📦 Партия (вкл. смену): ' + batchPartsToday + ' шт (' + batchWeightKg.toFixed(3) + ' кг)\n';
                     }
                     report += '\n';
                     
@@ -759,11 +708,11 @@ function calculateAll() {
                     materialTotals[d.mat].defectWeight += defectWeightKg;
                     materialTotals[d.mat].batchWeight += batchWeightKg;
                 }
-            }
-            
+            }            
             report += '━━━━━━━━━━━━━━━━━━━━\n';
             report += '📦 ИТОГО ПО СЫРЬЮ:\n\n';
-                        for (var mat in materialTotals) {
+            
+            for (var mat in materialTotals) {
                 if (materialTotals.hasOwnProperty(mat)) {
                     var stats = materialTotals[mat];
                     report += '🔹 ' + mat + '\n';
@@ -773,7 +722,7 @@ function calculateAll() {
                         report += '   Брак: ' + stats.defectWeight.toFixed(3) + ' кг\n';
                     }
                     if (stats.batchWeight > 0) {
-                        report += '   Партия: ' + stats.batchWeight.toFixed(3) + ' кг\n';
+                        report += '   Партия (вкл. смену): ' + stats.batchWeight.toFixed(3) + ' кг\n';
                     }
                     report += '\n';
                 }
@@ -808,11 +757,11 @@ function calculateAll() {
             
             document.getElementById('tab-' + tabName).classList.add('active');
             
-            if (tabName === 'calc') {
-                document.getElementById('tab-btn-calc').classList.add('active');
+            if (tabName === 'calc') {                document.getElementById('tab-btn-calc').classList.add('active');
             } else {
                 document.getElementById('tab-btn-setup').classList.add('active');
-                calculateAll();            }
+                calculateAll();
+            }
         }
 
         function resetAll() {
