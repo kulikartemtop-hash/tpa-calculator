@@ -559,3 +559,811 @@
             ">Закрыть</button>
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script>
+        var TPA_LIST = [
+            "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6",
+            "ТПА 7", "ТПА 8", "ТПА 9", "ТПА 10", "ТПА 11", "ТПА 12",
+            "ТПА 13", "Малыш"
+        ];
+        var MATERIALS = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
+
+        function init() {
+            var savedTheme = localStorage.getItem('tpa_theme') || 'light';
+            var savedWallpaper = localStorage.getItem('tpa_wallpaper') || '1';
+            var savedVisibility = JSON.parse(localStorage.getItem('tpa_visibility')) || {};
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.documentElement.setAttribute('data-wallpaper', savedWallpaper);
+            
+            var wpSelect = document.getElementById('wallpaper-select');
+            if (wpSelect) {
+                wpSelect.value = savedWallpaper;
+                wpSelect.addEventListener('change', function() {
+                    changeWallpaper(this.value);
+                });
+            }
+            
+            updateThemeIcon(savedTheme);
+
+            var container = document.getElementById('tpa-container');
+            if (!container) {
+                console.error('Контейнер tpa-container не найден!');
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < TPA_LIST.length; i++) {
+                var tpa = TPA_LIST[i];
+                var isVisible = savedVisibility[tpa] !== false;
+                
+                var matOptions = '';
+                for (var j = 0; j < MATERIALS.length; j++) {
+                    matOptions += '<option value="' + MATERIALS[j] + '">' + MATERIALS[j] + '</option>';
+                }
+                
+                html += '<div class="tpa-card" data-tpa="' + tpa + '" style="' + (isVisible ? '' : 'display: none;') + '">' +
+                    '<div class="tpa-toggle-container">' +
+                        '<label class="tpa-toggle-label">' + tpa + '</label>' +
+                        '<label class="tpa-toggle-switch">' +
+                            '<input type="checkbox" class="tpa-visibility-checkbox" data-tpa="' + tpa + '" ' + (isVisible ? 'checked' : '') + '>' +
+                            '<span class="slider"></span>' +
+                        '</label>' +                    '</div>' +
+                    '<div class="tpa-header">' +
+                        '<span>Данные</span>' +
+                        '<div class="tpa-mini-result" id="res-' + i + '">' +
+                            '<div class="good">0 шт</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-row">' +
+                        '<div class="form-group full-width">' +
+                            '<label><i class="fas fa-cube"></i> Материал</label>' +
+                            '<select class="calc-input" data-idx="' + i + '" data-field="mat">' +
+                                matOptions +
+                            '</select>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-row">' +
+                        '<div class="form-group">' +
+                            '<label style="color: var(--success);"><i class="fas fa-box-open"></i> Готовые: шт. в кор.</label>' +
+                            '<input type="number" class="calc-input" data-idx="' + i + '" data-field="perBox" inputmode="numeric" placeholder="0">' +
+                        '</div>' +
+                        '<div class="form-group">' +
+                            '<label style="color: var(--success);"><i class="fas fa-boxes"></i> Готовые: кол-во кор.</label>' +
+                            '<input type="number" class="calc-input" data-idx="' + i + '" data-field="boxes" inputmode="numeric" placeholder="0">' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-row">' +
+                        '<div class="form-group">' +
+                            '<label style="color: var(--danger);"><i class="fas fa-times-circle"></i> Брак (шт)</label>' +
+                            '<input type="number" class="calc-input input-defect" data-idx="' + i + '" data-field="defect" inputmode="numeric" placeholder="0">' +
+                        '</div>' +
+                        '<div class="form-group">' +
+                            '<label><i class="fas fa-weight-hanging"></i> Вес 1 дет. (г)</label>' +
+                            '<input type="number" class="calc-input" data-idx="' + i + '" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="batch-section">' +
+                        '<div class="batch-info" id="batch-info-' + i + '">Партия: 0 шт / 0.000 кг</div>' +
+                        '<div class="form-group full-width">' +
+                            '<label style="color: var(--warning);"><i class="fas fa-layer-group"></i> Всего за партию (шт)</label>' +
+                            '<input type="number" class="calc-input input-batch" data-idx="' + i + '" data-field="batchTotal" inputmode="numeric" placeholder="0">' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            }
+            container.innerHTML = html;
+            
+            loadData();
+            
+            var inputs = document.querySelectorAll('.calc-input');
+            for (var k = 0; k < inputs.length; k++) {                inputs[k].addEventListener('input', function() {
+                    calculateAll();
+                    saveData();
+                });
+            }
+            
+            // Чекбоксы видимости
+            var visibilityCheckboxes = document.querySelectorAll('.tpa-visibility-checkbox');
+            for (var l = 0; l < visibilityCheckboxes.length; l++) {
+                visibilityCheckboxes[l].addEventListener('change', function() {
+                    var tpa = this.getAttribute('data-tpa');
+                    var card = document.querySelector('[data-tpa="' + tpa + '"]');
+                    card.style.display = this.checked ? 'block' : 'none';
+                    saveVisibility();
+                    calculateAll();
+                });
+            }
+            
+            var themeBtn = document.getElementById('theme-btn');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', toggleTheme);
+            }
+            
+            var toggleAllBtn = document.getElementById('toggle-all-btn');
+            if (toggleAllBtn) {
+                toggleAllBtn.addEventListener('click', toggleAllTpaVisibility);
+            }
+            
+            var resetBtn = document.getElementById('reset-btn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', resetAll);
+            }
+            
+            var shareBtn = document.getElementById('share-btn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', shareReport);
+            }
+            
+            var generateQrBtn = document.getElementById('generate-qr-btn');
+            if (generateQrBtn) {
+                generateQrBtn.addEventListener('click', generateQrCode);
+            }
+            
+            var scanQrBtn = document.getElementById('scan-qr-btn');
+            if (scanQrBtn) {
+                scanQrBtn.addEventListener('click', startScan);
+            }
+            
+            var tabBtnCalc = document.getElementById('tab-btn-calc');
+            var tabBtnSetup = document.getElementById('tab-btn-setup');            if (tabBtnCalc) {
+                tabBtnCalc.addEventListener('click', function() {
+                    switchTab('calc');
+                });
+            }
+            if (tabBtnSetup) {
+                tabBtnSetup.addEventListener('click', function() {
+                    switchTab('setup');
+                });
+            }
+            
+            calculateAll();
+        }
+
+        function toggleAllTpaVisibility() {
+            var checkboxes = document.querySelectorAll('.tpa-visibility-checkbox');
+            var allVisible = true;
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (!checkboxes[i].checked) {
+                    allVisible = false;
+                    break;
+                }
+            }
+            for (var j = 0; j < checkboxes.length; j++) {
+                checkboxes[j].checked = !allVisible;
+                var tpa = checkboxes[j].getAttribute('data-tpa');
+                var card = document.querySelector('[data-tpa="' + tpa + '"]');
+                card.style.display = !allVisible ? 'block' : 'none';
+            }
+            saveVisibility();
+            calculateAll();
+        }
+
+        function saveVisibility() {
+            var checkboxes = document.querySelectorAll('.tpa-visibility-checkbox');
+            var visibility = {};
+            for (var i = 0; i < checkboxes.length; i++) {
+                var tpa = checkboxes[i].getAttribute('data-tpa');
+                visibility[tpa] = checkboxes[i].checked;
+            }
+            localStorage.setItem('tpa_visibility', JSON.stringify(visibility));
+        }
+
+        function toggleTheme() {
+            var current = document.documentElement.getAttribute('data-theme');
+            var next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('tpa_theme', next);
+            updateThemeIcon(next);
+        }
+        function updateThemeIcon(theme) {
+            var btn = document.getElementById('theme-btn');
+            if (btn) {
+                btn.innerHTML = theme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            }
+        }
+
+        function changeWallpaper(val) {
+            document.documentElement.setAttribute('data-wallpaper', val);
+            localStorage.setItem('tpa_wallpaper', val);
+        }
+
+        function saveData() {
+            var inputs = document.querySelectorAll('.calc-input');
+            var dataToSave = {};
+            for (var i = 0; i < inputs.length; i++) {
+                var input = inputs[i];
+                var idx = input.getAttribute('data-idx');
+                var field = input.getAttribute('data-field');
+                if (!dataToSave[idx]) dataToSave[idx] = {};
+                dataToSave[idx][field] = input.value;
+            }
+            localStorage.setItem('tpa_calc_data', JSON.stringify(dataToSave));
+        }
+
+        function loadData() {
+            var saved = localStorage.getItem('tpa_calc_data');
+            if (saved) {
+                var dataToSave = JSON.parse(saved);
+                var inputs = document.querySelectorAll('.calc-input');
+                for (var i = 0; i < inputs.length; i++) {
+                    var input = inputs[i];
+                    var idx = input.getAttribute('data-idx');
+                    var field = input.getAttribute('data-field');
+                    if (dataToSave[idx] && dataToSave[idx][field] !== undefined) {
+                        input.value = dataToSave[idx][field];
+                    }
+                }
+            }
+        }
+function calculateAll() {
+            var inputs = document.querySelectorAll('.calc-input');
+            var data = {};
+            
+            for (var i = 0; i < TPA_LIST.length; i++) {
+                data[i] = { 
+                    name: TPA_LIST[i], 
+                    mat: 'Не выбрано', 
+                    perBox: 0, 
+                    boxes: 0, 
+                    weight: 0, 
+                    defect: 0,
+                    batchTotal: 0
+                };
+            }
+
+            for (var j = 0; j < inputs.length; j++) {
+                var input = inputs[j];
+                var idx = input.getAttribute('data-idx');
+                var field = input.getAttribute('data-field');
+                if (field === 'mat') {
+                    data[idx].mat = input.value;
+                } else {
+                    var val = parseFloat(input.value);
+                    if (!isNaN(val) && val >= 0) {
+                        data[idx][field] = val;
+                    }
+                }
+            }
+
+            var summaryHtml = '';
+            var hasData = false;
+            var materialTotals = {};
+
+            for (var k = 0; k < TPA_LIST.length; k++) {
+                var tpa = TPA_LIST[k];
+                var d = data[k];
+                
+                var goodParts = d.perBox * d.boxes;
+                var defectParts = d.defect;
+                var batchParts = d.batchTotal;
+                
+                var goodWeightKg = (goodParts * d.weight) / 1000;
+                var defectWeightKg = (defectParts * d.weight) / 1000;
+                var totalWeightKg = goodWeightKg + defectWeightKg;
+
+                var resEl = document.getElementById('res-' + k);
+                var batchInfoEl = document.getElementById('batch-info-' + k);
+                
+                if (resEl) {                    if (goodParts > 0 || defectParts > 0) {
+                        var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
+                        if (defectParts > 0) {
+                            miniHtml += '<div class="defect">Брак: ' + defectParts + ' шт</div>';
+                        }
+                        resEl.innerHTML = miniHtml;
+                        hasData = true;
+                    } else {
+                        resEl.innerHTML = '<div class="good">0 шт</div>';
+                    }
+                }
+                
+                if (batchInfoEl) {
+                    batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + ((batchParts * d.weight) / 1000).toFixed(3) + ' кг';
+                }
+
+                var card = document.querySelector('[data-tpa="' + tpa + '"]');
+                var isCardVisible = card.style.display !== 'none';
+
+                if (isCardVisible && (goodParts > 0 || defectParts > 0)) {
+                    summaryHtml += '<div class="summary-item">' +
+                        '<div class="summary-tpa">' + tpa + '</div>' +
+                        '<div class="summary-data">' +
+                            '<div class="parts">Гот: ' + goodParts + ' шт | Брак: ' + defectParts + ' шт</div>' +
+                            '<div class="weight-good">Вес готовых: ' + goodWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="weight-defect">Вес брака: ' + defectWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="weight-total">Общий вес: ' + totalWeightKg.toFixed(3) + ' кг</div>' +
+                        '</div>' +
+                    '</div>';
+
+                    if (!materialTotals[d.mat]) {
+                        materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
+                    }
+                    materialTotals[d.mat].totalWeight += totalWeightKg;
+                    materialTotals[d.mat].goodWeight += goodWeightKg;
+                    materialTotals[d.mat].defectWeight += defectWeightKg;
+                }
+            }
+
+            var summaryContainer = document.getElementById('summary-container');
+            var shareBtn = document.getElementById('share-btn');
+            
+            if (summaryContainer) {
+                if (hasData) {
+                    var matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью (только видимые ТПА):</div>';
+                    for (var mat in materialTotals) {
+                        if (materialTotals.hasOwnProperty(mat)) {
+                            var stats = materialTotals[mat];
+                            matSummaryHtml += '<div class="summary-item material-item">' +
+                                '<div class="summary-tpa">' + mat + '</div>' +                                '<div class="summary-data">' +
+                                    '<div class="parts">' + stats.totalWeight.toFixed(3) + ' кг всего</div>' +
+                                    '<div class="weight-good">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
+                                    '<div class="weight-defect">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
+                                '</div>' +
+                            '</div>';
+                        }
+                    }
+                    summaryHtml += matSummaryHtml;
+                    summaryContainer.innerHTML = summaryHtml;
+                    
+                    if (shareBtn) {
+                        shareBtn.classList.add('visible');
+                    }
+                } else {
+                    summaryContainer.innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
+                    
+                    if (shareBtn) {
+                        shareBtn.classList.remove('visible');
+                    }
+                }
+            }
+        }
+
+        function shareReport() {
+            var inputs = document.querySelectorAll('.calc-input');
+            var data = {};
+            
+            for (var i = 0; i < TPA_LIST.length; i++) {
+                data[i] = { 
+                    name: TPA_LIST[i], 
+                    mat: 'Не выбрано', 
+                    perBox: 0, 
+                    boxes: 0, 
+                    weight: 0, 
+                    defect: 0,
+                    batchTotal: 0
+                };
+            }
+
+            for (var j = 0; j < inputs.length; j++) {
+                var input = inputs[j];
+                var idx = input.getAttribute('data-idx');
+                var field = input.getAttribute('data-field');
+                if (field === 'mat') {
+                    data[idx].mat = input.value;
+                } else {
+                    var val = parseFloat(input.value);
+                    if (!isNaN(val) && val >= 0) {
+                        data[idx][field] = val;                    }
+                }
+            }
+
+            var now = new Date();
+            var dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+            
+            var reportLines = [];
+            reportLines.push('📊 ПРЕМИУМ ОТЧЁТ ТПА');
+            reportLines.push('📅 Дата: ' + dateStr);
+            reportLines.push('━━━━━━━━━━━━━━━━━━━━');
+
+            var materialTotals = {};
+            var totalAllGood = 0;
+            var totalAllDefect = 0;
+
+            for (var k = 0; k < TPA_LIST.length; k++) {
+                var tpa = TPA_LIST[k];
+                var d = data[k];
+                
+                var card = document.querySelector('[data-tpa="' + tpa + '"]');
+                var isCardVisible = card.style.display !== 'none';
+                
+                var goodParts = d.perBox * d.boxes;
+                var defectParts = d.defect;
+                var goodWeightKg = (goodParts * d.weight) / 1000;
+                var defectWeightKg = (defectParts * d.weight) / 1000;
+                var totalWeightKg = goodWeightKg + defectWeightKg;
+
+                if (isCardVisible && (goodParts > 0 || defectParts > 0)) {
+                    reportLines.push(`🏭 ${tpa} (${d.mat})`);
+                    reportLines.push(`   ✅ Готовые: ${goodParts} шт (${goodWeightKg.toFixed(3)} кг)`);
+                    if (defectParts > 0) {
+                        reportLines.push(`   ❌ Брак: ${defectParts} шт (${defectWeightKg.toFixed(3)} кг)`);
+                    }
+                    reportLines.push(`   📦 Общий вес: ${totalWeightKg.toFixed(3)} кг`);
+                    reportLines.push('');
+
+                    if (!materialTotals[d.mat]) {
+                        materialTotals[d.mat] = { good: 0, defect: 0 };
+                    }
+                    materialTotals[d.mat].good += goodWeightKg;
+                    materialTotals[d.mat].defect += defectWeightKg;
+                    totalAllGood += goodWeightKg;
+                    totalAllDefect += defectWeightKg;
+                }
+            }
+
+            reportLines.push('━━━━━━━━━━━━━━━━━━━━');
+            reportLines.push('📦 ИТОГО (видимые ТПА):');            reportLines.push(`   Готовые: ${totalAllGood.toFixed(3)} кг`);
+            if (totalAllDefect > 0) {
+                reportLines.push(`   Брак: ${totalAllDefect.toFixed(3)} кг`);
+            }
+            reportLines.push(`   Всего: ${(totalAllGood + totalAllDefect).toFixed(3)} кг`);
+
+            var report = reportLines.join('\n');
+
+            // Создаём модальное окно
+            var modal = document.createElement('div');
+            modal.id = 'share-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            modal.innerHTML = `
+                <div style="
+                    background: var(--card);
+                    border-radius: 20px;
+                    padding: 20px;
+                    max-width: 95%;
+                    width: 400px;
+                    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid var(--border);
+                ">
+                    <h3 style="color: var(--primary); margin-top: 0;">📤 Поделиться отчётом</h3>
+                    <textarea id="report-text" rows="6" style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid var(--border);
+                        border-radius: 12px;
+                        font-size: 14px;
+                        background: var(--bg);
+                        color: var(--text);
+                        resize: none;
+                    ">${report}</textarea>
+                    <div style="display: flex; gap: 10px; margin-top: 16px;">
+                        <button class="btn-copy" style="
+                            flex: 1;
+                            padding: 12px;
+                            background: var(--success);
+                            color: white;
+                            border: none;
+                            border-radius: 12px;                            font-weight: 600;
+                        ">📋 Скопировать</button>
+                        <button class="btn-whatsapp" style="
+                            flex: 1;
+                            padding: 12px;
+                            background: #25D366;
+                            color: white;
+                            border: none;
+                            border-radius: 12px;
+                            font-weight: 600;
+                        ">💬 WhatsApp</button>
+                        <button class="btn-tg" style="
+                            flex: 1;
+                            padding: 12px;
+                            background: #0088cc;
+                            color: white;
+                            border: none;
+                            border-radius: 12px;
+                            font-weight: 600;
+                        ">✈️ Telegram</button>
+                    </div>
+                    <div style="margin-top: 16px; text-align: center;">
+                        <button class="btn-paste" style="
+                            padding: 10px 16px;
+                            background: rgba(14, 165, 233, 0.1);
+                            color: var(--primary);
+                            border: 1px solid var(--primary);
+                            border-radius: 12px;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">➕ Вставить в приложение</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            var textArea = modal.querySelector('#report-text');
+            var btnCopy = modal.querySelector('.btn-copy');
+            var btnWhatsApp = modal.querySelector('.btn-whatsapp');
+            var btnTg = modal.querySelector('.btn-tg');
+            var btnPaste = modal.querySelector('.btn-paste');
+
+            btnCopy.onclick = function() {
+                navigator.clipboard.writeText(report).then(() => {
+                    btnCopy.textContent = '✅ Скопировано!';
+                    setTimeout(() => { btnCopy.textContent = '📋 Скопировать'; }, 2000);
+                });
+            };
+
+            btnWhatsApp.onclick = function() {                var encoded = encodeURIComponent(report);
+                window.open(`https://web.whatsapp.com/send?text=${encoded}`, '_blank');
+            };
+
+            btnTg.onclick = function() {
+                var encoded = encodeURIComponent(report);
+                window.open(`https://t.me/share/url?url=&text=${encoded}`, '_blank');
+            };
+
+            btnPaste.onclick = function() {
+                parseAndApplyReport(report);
+                modal.remove();
+            };
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function parseAndApplyReport(report) {
+            var lines = report.split('\n');
+            var currentTpa = null;
+            var tpaData = {};
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (line.startsWith('🏭 ')) {
+                    var match = line.match(/🏭 (\S+ \S+) \((.+)\)/);
+                    if (match) {
+                        currentTpa = match[1];
+                        tpaData[currentTpa] = { mat: match[2], good: 0, defect: 0, weight: 0 };
+                    }
+                } else if (currentTpa && line.startsWith('   ✅ Готовые:')) {
+                    var gMatch = line.match(/✅ Готовые: (\d+) шт \(([\d.]+) кг\)/);
+                    if (gMatch) {
+                        tpaData[currentTpa].good = parseInt(gMatch[1]);
+                        tpaData[currentTpa].weight = parseFloat(gMatch[2]) * 1000; // кг → г
+                    }
+                } else if (currentTpa && line.startsWith('   ❌ Брак:')) {
+                    var dMatch = line.match(/❌ Брак: (\d+) шт \(([\d.]+) кг\)/);
+                    if (dMatch) {
+                        tpaData[currentTpa].defect = parseInt(dMatch[1]);
+                    }
+                }
+            }
+
+            // Вставляем в форму
+            for (var tpa in tpaData) {
+                var idx = TPA_LIST.indexOf(tpa);
+                if (idx >= 0) {                    var d = tpaData[tpa];
+                    var inputs = document.querySelectorAll('.calc-input');
+                    for (var j = 0; j < inputs.length; j++) {
+                        var input = inputs[j];
+                        var inpIdx = input.getAttribute('data-idx');
+                        if (inpIdx == idx) {
+                            var field = input.getAttribute('data-field');
+                            if (field === 'mat') input.value = d.mat;
+                            else if (field === 'perBox' || field === 'boxes') {
+                                input.value = d.good > 0 ? Math.floor(d.good / 100) : 0;
+                            } else if (field === 'defect') {
+                                input.value = d.defect;
+                            } else if (field === 'weight') {
+                                input.value = d.weight.toFixed(3);
+                            }
+                        }
+                    }
+                }
+            }
+
+            calculateAll();
+            alert('✅ Данные из отчёта вставлены в форму!');
+        }
+function generateQrCode() {
+            var data = {};
+            for (var i = 0; i < TPA_LIST.length; i++) {
+                var tpa = TPA_LIST[i];
+                var card = document.querySelector('[data-tpa="' + tpa + '"]');
+                if (card.style.display === 'none') continue;
+
+                var inputs = document.querySelectorAll('.calc-input');
+                var d = { mat: '', perBox: 0, boxes: 0, defect: 0, weight: 0 };
+                for (var j = 0; j < inputs.length; j++) {
+                    var input = inputs[j];
+                    var idx = input.getAttribute('data-idx');
+                    var field = input.getAttribute('data-field');
+                    if (idx == i) {
+                        if (field == 'mat') d.mat = input.value;
+                        else {
+                            var val = parseFloat(input.value) || 0;
+                            d[field] = val;
+                        }
+                    }
+                }
+                data[tpa] = d;
+            }
+
+            try {
+                var jsonStr = JSON.stringify(data);
+                var qr = qrcode(0, 'M');
+                qr.addData(jsonStr);
+                qr.make();
+                var canvas = document.getElementById('qr-canvas');
+                canvas.width = 200;
+                canvas.height = 200;
+                var ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, 200, 200);
+                qr.renderCanvas(200, 200, ctx);
+                document.getElementById('qr-data').textContent = 'Данные: ' + Object.keys(data).length + ' ТПА';
+                document.getElementById('qr-modal').style.display = 'flex';
+            } catch (e) {
+                alert('Ошибка генерации QR: ' + e.message);
+            }
+        }
+
+        var qrModal = document.getElementById('qr-modal');
+        var closeQrBtn = document.getElementById('close-qr-modal');
+        if (closeQrBtn) {
+            closeQrBtn.addEventListener('click', function() {
+                qrModal.style.display = 'none';
+            });
+        }
+        // --- Сканирование QR ---
+        var scanModal = document.getElementById('scan-modal');
+        var video = document.getElementById('video');
+        var scanResultEl = document.getElementById('scan-result');
+        var closeScanBtn = document.getElementById('close-scan-modal');
+
+        async function startScan() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+                scanModal.style.display = 'flex';
+                startScanning();
+            } catch (e) {
+                alert('Камера недоступна: ' + e.message);
+            }
+        }
+
+        function startScanning() {
+            const canvasElement = document.createElement('canvas');
+            const canvasContext = canvasElement.getContext('2d');
+            const video = document.getElementById('video');
+
+            function drawLine(begin, end, color) {
+                canvasContext.beginPath();
+                canvasContext.moveTo(begin.x, begin.y);
+                canvasContext.lineTo(end.x, end.y);
+                canvasContext.lineWidth = 4;
+                canvasContext.strokeStyle = color;
+                canvasContext.stroke();
+            }
+
+            function tick() {
+                canvasElement.height = video.videoHeight;
+                canvasElement.width = video.videoWidth;
+                canvasContext.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+
+                const imageData = canvasContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    invert: true
+                });
+
+                if (code) {
+                    try {
+                        var parsed = JSON.parse(code.data);
+                        scanResultEl.textContent = '✅ QR распознан! Нажмите "Применить"';
+                        scanResultEl.style.color = 'var(--success)';
+                        
+                        if (!document.getElementById('apply-qr-btn')) {
+                            var applyBtn = document.createElement('button');
+                            applyBtn.id = 'apply-qr-btn';                            applyBtn.style.cssText = `
+                                width: 100%; padding: 12px;
+                                background: var(--primary);
+                                color: white; border: none;
+                                border-radius: 12px;
+                                font-weight: 600;
+                                margin-top: 10px;
+                            `;
+                            applyBtn.textContent = '✅ Применить данные';
+                            applyBtn.onclick = function() {
+                                applyQrData(parsed);
+                                scanModal.style.display = 'none';
+                                video.srcObject.getTracks().forEach(track => track.stop());
+                            };
+                            scanModal.querySelector('div').appendChild(applyBtn);
+                        }
+                    } catch (e) {
+                        scanResultEl.textContent = '❌ Ошибка: невалидный QR';
+                        scanResultEl.style.color = 'var(--danger)';
+                    }
+                } else {
+                    scanResultEl.textContent = '🔍 Наведите камеру на QR-код';
+                    scanResultEl.style.color = 'var(--text-secondary)';
+                }
+
+                requestAnimationFrame(tick);
+            }
+
+            tick();
+        }
+
+        function applyQrData(data) {
+            for (var tpa in data) {
+                var idx = TPA_LIST.indexOf(tpa);
+                if (idx < 0) continue;
+
+                var d = data[tpa];
+                var inputs = document.querySelectorAll('.calc-input');
+                for (var j = 0; j < inputs.length; j++) {
+                    var input = inputs[j];
+                    var inpIdx = input.getAttribute('data-idx');
+                    var field = input.getAttribute('data-field');
+                    if (inpIdx == idx) {
+                        if (field == 'mat') {
+                            input.value = d.mat || '';
+                        } else {
+                            input.value = d[field] !== undefined ? String(d[field]) : '';
+                        }
+                    }
+                }            }
+            calculateAll();
+            alert('✅ Данные из QR успешно применены!');
+        }
+
+        if (closeScanBtn) {
+            closeScanBtn.addEventListener('click', function() {
+                scanModal.style.display = 'none';
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                }
+            });
+        }
+
+        function switchTab(tabName) {
+            var tabContents = document.querySelectorAll('.tab-content');
+            var tabBtns = document.querySelectorAll('.tab-btn');
+            
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            for (var j = 0; j < tabBtns.length; j++) {
+                tabBtns[j].classList.remove('active');
+            }
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            if (tabName === 'calc') {
+                document.getElementById('tab-btn-calc').classList.add('active');
+            } else {
+                document.getElementById('tab-btn-setup').classList.add('active');
+                calculateAll();
+            }
+        }
+
+        function resetAll() {
+            if(confirm('Очистить все введенные данные? Настройки темы, фона и видимости ТПА останутся.')) {
+                var inputs = document.querySelectorAll('.calc-input');
+                for (var i = 0; i < inputs.length; i++) {
+                    var input = inputs[i];
+                    if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
+                    } else {
+                        input.value = '';
+                    }
+                }
+                localStorage.removeItem('tpa_calc_data');
+                calculateAll();
+            }
+        }
+if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
