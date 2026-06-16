@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light" data-wallpaper="1">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -78,7 +78,7 @@
             display: flex;
             background: var(--brand-light);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+ }
         .tab-btn {
             flex: 1;
             padding: 14px;
@@ -245,12 +245,12 @@
             align-items: center;
             margin-bottom: 10px;
         }
-        .final-report-material:last-of-type { margin-bottom:0; }
+        .final-report-material:last-of-type { margin-bottom: 0; }
     </style>
 </head>
 <body>
     <header>
-        <img alt="Логотип" id="019ecfbd-7411-7c7b-8033-13d5983e5f98"> <!-- Поставьте сюда свой логотип -->
+        <img alt="Логотип" id="019ecfc8-78b2-77f2-b0d8-e86f62db234a"> <!-- Поставьте сюда свой логотип -->
         <h1>Калькулятор ТПА</h1>
     </header>
 
@@ -288,153 +288,154 @@
     </div>
 
     <script>
-const TPA_LIST = [
-    "ТПА 1 (ПВХ серый)",
-    "ТПА 2 (ПВХ коричневый)",
-    "ТПА 3 (АБС)",
-    "ТПА 4 (PP)",
-    "ТПА 5 (ПВХ серый)",
-    "ТПА 6 (ПВХ коричневый)",
-    "ТПА 7 (АБС)",
-    "ТПА 8 (PP)",
-    "ТПА 9 (ПВХ серый)",
-    "ТПА 10 (ПВХ коричневый)",
-    "ТПА 11 (АБС)",
-    "ТПА 12 (PP)",
-    "ТПА 13 (ПВХ серый)",
-    "Малыш (ПП)"
-];
+       const TPA_LIST = [
+           "ТПА 1 (ПВХ серый)",
+           "ТПА 2 (ПВХ коричневый)",
+           "ТПА 3 (АБС)",
+           "ТПА 4 (PP)",
+           "ТПА 5 (ПВХ серый)",
+           "ТПА 6 (ПВХ коричневый)",
+           "ТПА 7 (АБС)",
+           "ТПА 8 (PP)",
+           "ТПА 9 (ПВХ серый)",
+           "ТПА 10 (ПВХ коричневый)",
+           "ТПА 11 (АБС)",
+           "ТПА 12 (PP)",
+           "ТПА 13 (ПВХ серый)",
+           "Малыш (ПП)"
+       ];
 
 function init() {
-    const container = document.getElementById("tpa-container");
-    let html = "";
+           const container = document.getElementById("tpa-container");
+           let html = "";
 
-    for (const [i, tpa] of TPA_LIST.entries()) {
-        const [name, material] = tpa.split(" (");
-        const matShort = material.slice(0, -1); // Убираем скобку
+           for (const tpa of TPA_LIST) {
+               const [name, material] = tpa.split(" (");
+               const matShort = material.slice(0, -1); // Убираем скобку
 
-        html += `
-            <div class="tpa-card" data-name="${name}">
-                <div class="tpa-header">
-                    <span>${name}</span>
-                    <div class="tpa-mini-result" id="res-${i}">
-                        <div class="good">0 шт</div>
-                    </div>
-                </div>
+               html += `
+                   <div class="tpa-card" data-key="${name}">
+                       <div class="tpa-header">
+                           <span>${name}</span>
+                           <div class="tpa-mini-result" id="res-${name}">
+                               <div class="good">0 шт</div>
+                           </div>
+                       </div>
 
-                <!-- Форма для ввода -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Деталей в коробке (шт)</label>
-                        <input type="number" class="calc-input" data-idx="${i}" data-field="perBox" inputmode="numeric" placeholder="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Коробок за смену (шт)</label>
-                        <input type="number" class="calc-input" data-idx="${i}" data-field="boxes" inputmode="numeric" placeholder="0">
-                    </div>
-                </div>
+                       <!-- Форма для ввода -->
+                       <div class="form-row">
+                           <div class="form-group">
+                               <label>Деталей в коробке (шт)</label>
+                               <input type="number" class="calc-input" data-key="${name}" data-field="perBox" inputmode="numeric" placeholder="0">
+                           </div>
+                           <div class="form-group">
+                               <label>Коробок за смену (шт)</label>
+                               <input type="number" class="calc-input" data-key="${name}" data-field="boxes" inputmode="numeric" placeholder="0">
+                           </div>
+                       </div>
 
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Брак за смену (шт)</label>
-                        <input type="number" class="calc-input input-defect" data-idx="${i}" data-field="defect" inputmode="numeric" placeholder="0">
-                    </div>
-                </div>
+                       <div class="form-row">
+                           <div class="form-group full-width">
+                               <label>Брак за смену (шт)</label>
+                               <input type="number" class="calc-input input-defect" data-key="${name}" data-field="defect" inputmode="numeric" placeholder="0">
+                           </div>
+                       </div>
 
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Вес 1 детали (г)</label>
-                        <input type="number" class="calc-input" data-idx="${i}" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">
-                    </div>
-                </div>
+                       <div class="form-row">
+                           <div class="form-group full-width">
+                               <label>Вес 1 детали (г)</label>
+                               <input type="number" class="calc-input" data-key="${name}" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">
+                           </div>
+                       </div>
 
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Накопленная партия (шт)</label>
-                        <input type="number" class="calc-input batch-total-editable" data-idx="${i}" data-field="batchTotal" inputmode="numeric" placeholder="0">
-                    </div>
-                </div>
-            </div>
-        `;
-    }
+                       <div class="form-row">
+                           <div class="form-group full-width">
+                               <label>Накопленная партия (шт)</label>
+                               <input type="number" class="calc-input batch-total-editable" data-key="${name}" data-field="batchTotal" inputmode="numeric" placeholder="0">
+                           </div>
+                       </div>
+                   </div>
+               `;
+           }
 
-    container.innerHTML = html;
+           container.innerHTML = html;
 
-    // Инициализация темы и обоев
-    const savedTheme = localStorage.getItem("tpa_theme") || "light";
-    const savedWallpaper = localStorage.getItem("tpa_wallpaper") || "1";
-    document.documentElement.setAttribute("data-theme", savedTheme);
-    document.documentElement.setAttribute("data-wallpaper", savedWallpaper);
+           // Инициализация темы и обоев
+           const savedTheme = localStorage.getItem("tpa_theme") || "light";
+           const savedWallpaper = localStorage.getItem("tpa_wallpaper") || "1";
+           document.documentElement.setAttribute("data-theme", savedTheme);
+           document.documentElement.setAttribute("data-wallpaper", savedTheme);
 
-    const wallpaperSelect = document.getElementById("wallpaper-select");
-    wallpaperSelect.value = savedWallpaper;
-    wallpaperSelect.addEventListener("change", () => changeWallpaper(wallpaperSelect.value));
+           const wallpaperSelect = document.getElementById("wallpaper-select");
+           wallpaperSelect.value = savedWallpaper;
+           wallpaperSelect.addEventListener("change", () => changeWallpaper(wallpaperSelect.value));
 
-    const themeBtn = document.getElementById("theme-btn");
-    themeBtn.textContent = savedTheme === "light" ? "🌙" : "☀️";
-    themeBtn.addEventListener("click", toggleTheme);
+           const themeBtn = document.getElementById("theme-btn");
+           themeBtn.textContent = savedTheme === "light" ? "🌙" : "☀️";
+           themeBtn.addEventListener("click", toggleTheme);
 
-    // Сбор всех полей ввода
-    const allInputs = document.querySelectorAll(".calc-input");
-    allInputs.forEach(input => {
-        input.addEventListener("input", () => {
-            calculateAll();
-            saveData();
-        });
-    });
+           // Сбор всех полей ввода
+           const allInputs = document.querySelectorAll(".calc-input");
+           allInputs.forEach(input => {
+               input.addEventListener("input", () => {
+                   calculateAll();
+                   saveData();
+               });
+           });
 
-    // Переключение вкладок
-    const tabs = document.querySelectorAll(".tab-btn");
-    tabs.forEach(tab => {
-        tab.addEventListener("click", () => switchTab(tab.id.split("-")[2]));
-    });
+           // Переключение вкладок
+           const tabs = document.querySelectorAll(".tab-btn");
+           tabs.forEach(tab => {
+               tab.addEventListener("click", () => switchTab(tab.id.split("-")[2]));
+           });
 
-    // Загрузка сохраненных данных
-    loadData();
-    calculateAll();
-}
+           // Загрузка сохраненных данных
+           loadData();
+           calculateAll();
+       }
+        function calculateAll() {
+            const data = collectData();
 
-function calculateAll() {
-    const data = collectData();
+            // 1. Генерируем отчет для вкладки "Для наладчика" (только смена)
+            generateOnShiftReport(data);
 
-    // 1. Генерируем отчет для вкладки "Для наладчика" (только смена)
-    generateOnShiftReport(data);
+            // 2. Генерируем отчет для вкладки "Калькулятор" (всё сразу)
+            generateFullReport(data);
 
-    // 2. Генерируем отчет для вкладки "Калькулятор" (всё сразу)
-    generateFullReport(data);
-
-    // 3. Генерируем итоговую сводку по материалам
-    generateFinalReport(data);
-}
-
-function collectData() {
-    const inputs = document.querySelectorAll(".calc-input");
-    const data = {};
-    TPA_LIST.forEach((_, i) => {
-        data[i] = {
-            name: "",
-            mat: "",
-            perBox: 0,
-            boxes: 0,
-            defect: 0,
-            weight: 0,
-            batchTotal: 0
-        };
-    });
-
-    inputs.forEach(input => {
-        const idx = input.dataset.idx;
-        const field = input.dataset.field;
-        const val = parseFloat(input.value) || 0;
-
-        if (field === "mat") {
-            data[idx][field] = input.value;
-        } else {
-            data[idx][field] = val;
+            // 3. Генерируем итоговую сводку по материалам
+            generateFinalReport(data);
         }
-    });
-    return data;
-}
+
+        function collectData() {
+            const inputs = document.querySelectorAll(".calc-input");
+            const data = {};
+
+            inputs.forEach(input => {
+                const key = input.dataset.key;
+                const field = input.dataset.field;
+                const val = parseFloat(input.value) || 0;
+
+                if (!data[key]) {
+                    data[key] = {
+                        name: key,
+                        mat: "",
+                        perBox: 0,
+                        boxes: 0,
+                        defect: 0,
+                        weight: 0,
+                        batchTotal: 0
+                    };
+                }
+
+                if (field === "mat") {
+                    data[key][field] = input.value;
+                } else {
+                    data[key][field] = val;
+                }
+            });
+            return data;
+        }
+
         function generateOnShiftReport(data) {
             const summaryContainer = document.getElementById(
                 "on-setup-summary-container"
@@ -445,7 +446,7 @@ function collectData() {
             for (const key in data) {
                 const d = data[key];
                 const goodParts = d.perBox * d.boxes;
-                const weightKg = (goodParts * d.weight) /1000;
+                const weightKg = (goodParts * d.weight) / 1000;
 
                 if (goodParts > 0) {
                     hasData = true;
@@ -618,10 +619,10 @@ function collectData() {
                 const data = JSON.parse(saved);
                 const inputs = document.querySelectorAll(".calc-input");
                 inputs.forEach(input => {
-                    const idx = input.dataset.idx;
+                    const key = input.dataset.key;
                     const field = input.dataset.field;
-                    if (data[idx] && data[idx][field] !== undefined) {
-                        input.value = data[idx][field];
+                    if (data[key] && data[key][field] !== undefined) {
+                        input.value = data[key][field];
                     }
                 });
             }
@@ -646,7 +647,8 @@ function collectData() {
             }
         }
 
-        // Инициализация if (document.readyState === "loading") {
+        // Инициализация
+        if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", init);
         } else {
             init();
