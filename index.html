@@ -5,14 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TPA Calculator</title>
     <style>
-        /* === ВСТРОЕННЫЕ SVG ИКОНКИ === */
-        .icon {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-        }
-
         /* === ОБЩИЕ СТИЛИ === */
         * { box-sizing: border-box; }
 
@@ -27,17 +19,7 @@
             backdrop-filter: blur(10px);
         }
 
-        /* --- SVG ИКОНКИ --- */
-        .icon-calculator svg { fill: currentColor; }
-        .icon-tools svg { fill: currentColor; }
-        .icon-compress svg { fill: currentColor; }
-        .icon-moon svg { fill: currentColor; }
-        .icon-sun svg { fill: currentColor; }
-        .icon-trash svg { fill: currentColor; }
-        .icon-share svg { fill: currentColor; }
-
         /* === ПЕРЕМЕННЫЕ ПО СТИЛЯМ === */
-        /* 🌊 Ocean */
         [data-style="ocean"][data-theme="light"] {
             --bg: #e6f7ff;
             --card: rgba(255, 255, 255, 0.92);
@@ -47,8 +29,9 @@
             --primary: #0ea5e9;
             --primary-dark: #0284c7;
             --success: #059669;
-            --danger: #dc2626;            --warning: #d97706;
-            --shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.25);
+            --danger: #dc2626;
+            --warning: #d97706;
+            --shadow: 0 8px 20px -8px rgba(14, 165, 233, 0.2);
             --glass: rgba(255, 255, 255, 0.4);
             --glass-border: rgba(14, 165, 233, 0.2);
             --bg-image: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
@@ -64,14 +47,12 @@
             --primary-dark: #0ea5e9;
             --success: #22c55e;
             --danger: #f87171;
-            --warning: #f97316;
-            --shadow: 0 12px 30px -10px rgba(30, 64, 175, 0.3);
+            --warning: #f97316;            --shadow: 0 8px 20px -8px rgba(30, 64, 175, 0.3);
             --glass: rgba(30, 64, 175, 0.2);
             --glass-border: rgba(56, 189, 248, 0.3);
             --bg-image: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
         }
 
-        /* 🌲 Forest */
         [data-style="forest"][data-theme="light"] {
             --bg: #f9f7f2;
             --card: rgba(255, 255, 255, 0.95);
@@ -83,7 +64,7 @@
             --success: #16a34a;
             --danger: #b91c1c;
             --warning: #d97706;
-            --shadow: 0 12px 30px -10px rgba(22, 103, 52, 0.15);
+            --shadow: 0 8px 20px -8px rgba(22, 103, 52, 0.15);
             --glass: rgba(249, 247, 242, 0.5);
             --glass-border: rgba(203, 213, 224, 0.3);
             --bg-image: linear-gradient(135deg, #e6d3b7 0%, #c5d6cb 100%);
@@ -96,16 +77,16 @@
             --text-secondary: #94a3b8;
             --border: #334155;
             --primary: #22c55e;
-            --primary-dark: #16a34a;            --success: #34d399;
+            --primary-dark: #16a34a;
+            --success: #34d399;
             --danger: #f87171;
             --warning: #f97316;
-            --shadow: 0 12px 30px -10px rgba(34, 197, 94, 0.2);
+            --shadow: 0 8px 20px -8px rgba(34, 197, 94, 0.2);
             --glass: rgba(15, 23, 42, 0.3);
             --glass-border: rgba(34, 197, 94, 0.2);
             --bg-image: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
 
-        /* 📋 Standard */
         [data-style="standard"][data-theme="light"] {
             --bg: #f8fafc;
             --card: rgba(255, 255, 255, 0.98);
@@ -115,9 +96,8 @@
             --primary: #1d4ed8;
             --primary-dark: #1e40af;
             --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --shadow: 0 8px 20px -5px rgba(29, 78, 216, 0.1);
+            --danger: #ef4444;            --warning: #f59e0b;
+            --shadow: 0 8px 20px -8px rgba(29, 78, 216, 0.1);
             --glass: rgba(248, 250, 252, 0.6);
             --glass-border: rgba(203, 213, 224, 0.4);
             --bg-image: #f8fafc;
@@ -134,80 +114,69 @@
             --success: #34d399;
             --danger: #f87171;
             --warning: #f97316;
-            --shadow: 0 8px 20px -5px rgba(99, 102, 241, 0.2);
+            --shadow: 0 8px 20px -8px rgba(99, 102, 241, 0.2);
             --glass: rgba(30, 41, 59, 0.4);
             --glass-border: rgba(99, 102, 241, 0.2);
             --bg-image: #0f172a;
         }
 
-        /* Фон */
         body {
             background: var(--bg-image);
             background-attachment: fixed;
         }
+
         /* --- ЭЛЕМЕНТЫ --- */
         .top-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 18px;
+            padding: 12px 16px;
             background: var(--card);
-            border-radius: 20px;
+            border-radius: 16px;
             box-shadow: var(--shadow);
-            margin: 12px;
+            margin: 10px;
             position: sticky;
             top: 8px;
             z-index: 101;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
         }
 
         .control-group {
             display: flex;
-            gap: 14px;
-            align-items: center;
-        }
+            gap: 12px;
+            align-items: center;        }
 
         .icon-btn {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             background: var(--glass);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-        }
-
-        .icon-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-            background: var(--card);
+            transition: all 0.2s;
+            font-size: 16px;
         }
 
         .compact-select {
-            padding: 12px 16px;
-            border-radius: 16px;
+            padding: 10px 12px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--card);
             color: var(--text);
-            font-size: 0.95rem;            min-width: 160px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.384 4 3.274 4h10.052a1 1 0 0 1 .707.293l4.264 5.685a1 1 0 0 1 0 1.391l-4.264 5.685A1 1 0 0 1 13.273 15H3.273a1 1 0 0 1-.707-.293l-4.264-5.685a1 1 0 0 1 0-1.391z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 12px;
+            font-size: 0.9rem;
+            min-width: 140px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .tabs {
             display: flex;
             background: var(--card);
-            border-radius: 20px;
-            margin: 12px;
+            border-radius: 16px;
+            margin: 10px;
             overflow: hidden;
             box-shadow: var(--shadow);
             border: 1px solid var(--glass-border);
@@ -215,19 +184,18 @@
 
         .tab-btn {
             flex: 1;
-            padding: 18px;
+            padding: 14px;
             border: none;
             background: transparent;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-secondary);
             cursor: pointer;
-            border-bottom: 4px solid transparent;
+            border-bottom: 3px solid transparent;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
+            justify-content: center;            gap: 8px;
+            transition: all 0.3s;
         }
 
         .tab-btn.active {
@@ -237,208 +205,174 @@
         }
 
         .container {
-            padding: 16px;
-            max-width: 680px;
+            padding: 12px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
         .tpa-card {
             background: var(--card);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
             border: 1px solid var(--border);
-            border-left: 6px solid var(--primary);
             box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.2s;
         }
 
-        .tpa-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 32px -12px rgba(14, 165, 233, 0.2);
-        }
+        .tpa-card:hover { transform: translateY(-2px); }
 
         .tpa-header {
-            font-weight: 800;
-            font-size: 1.3rem;
+            font-weight: 700;
+            font-size: 1.1rem;
             color: var(--primary-dark);
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--border);
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .tpa-mini-result {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-align: right;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 14px;
+            display: grid;            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
         
-        label {            font-size: 0.9rem;
+        label {
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom: 4px;
         }
 
         select, input {
-            padding: 16px;
+            padding: 12px;
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 10px;
             font-size: 16px;
             background: var(--bg);
             color: var(--text);
             width: 100%;
-            transition: all 0.3s;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
         }
 
         select:focus, input:focus {
             outline: none;
             border-color: var(--primary);
             background: var(--card);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
         }
 
         .batch-section {
             background: var(--glass);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 14px;
-            margin-top: 14px;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
         }
 
         .batch-info {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: var(--warning);
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-align: center;
         }
 
         .summary-list {
-            background: var(--card);
-            border-radius: 24px;
+            background: var(--card);            border-radius: 16px;
             overflow: hidden;
             border: 1px solid var(--border);
-            margin-bottom: 24px;            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
 
         .summary-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px;
+            padding: 14px;
             border-bottom: 1px solid var(--border);
-            transition: background 0.3s;
         }
 
-        .summary-item:hover { background: rgba(14, 165, 233, 0.08); }
         .summary-item:last-child { border-bottom: none; }
         
         .summary-tpa {
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary-dark);
-            min-width: 110px;
-            font-size: 1.1rem;
+            min-width: 80px;
+            font-size: 0.95rem;
         }
 
         .summary-data {
             text-align: right;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            font-size: 0.85rem;
+            line-height: 1.4;
         }
 
         .reset-btn {
             width: 100%;
-            padding: 18px;
+            padding: 14px;
             background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
             color: white;
             border: none;
-            border-radius:20px;
-            font-size: 1.1rem;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 600;
-            margin-top: 24px;
-            margin-bottom: 48px;
-            box-shadow: 0 12px 24px -8px rgba(185, 28, 28, 0.3);
+            margin-top: 20px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 8px rgba(185, 28, 28, 0.3);
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
         }
 
-        .share-btn {            width: 100%;
-            padding: 18px;
+        .share-btn {
+            width: 100%;
+            padding: 14px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius:20px;
-            font-size: 1.1rem;
+            color: white;            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 600;
-            margin-top: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 12px 24px -8px rgba(29, 78, 216, 0.3);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
             display: none;
         }
 
-        .share-btn.visible { display: flex; }
+        .share-btn.visible { display: block; }
 
         /* Сворачивание */
         .tpa-toggle-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding: 10px;
-            border-radius: 14px;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 10px;
             background: rgba(14, 165, 233, 0.1);
-            transition: all 0.3s;
-        }
-
-        [data-style="forest"] .tpa-toggle-container {
-            background: rgba(22, 103, 52, 0.1);
-        }
-
-        [data-style="standard"] .tpa-toggle-container {
-            background: rgba(29, 78, 216, 0.1);
         }
 
         .tpa-collapsed {
-            height: 56px !important;
+            height: 48px !important;
             overflow: hidden;
             padding-bottom: 0 !important;
-            border-radius: 16px;
+            border-radius: 12px;
             transition: all 0.3s ease;
         }
+
         .tpa-collapsed .tpa-header {
             margin-bottom: 0;
             padding-bottom: 0;
@@ -453,80 +387,48 @@
             display: block;
             text-align: left;
             font-size: 0.75rem;
-            margin-top: 6px;
+            margin: 4px 0 0;
+        }
+
+        .tpa-collapsed .tpa-mini-result .good {            color: var(--success);
+            font-weight: 600;
+        }
+        .tpa-collapsed .tpa-mini-result .defect {
+            color: var(--danger);
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <!-- SVG ИКОНКИ -->
-    <svg style="display: none;">
-        <symbol id="icon-calculator" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </symbol>
-        <symbol id="icon-tools" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </symbol>
-        <symbol id="icon-compress" viewBox="0 0 24 24">
-            <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.59L18 14l-6-6z"/>
-        </symbol>
-        <symbol id="icon-moon" viewBox="0 0 24 24">
-            <path d="M17.75 4.09v1.27a1.75 1.75 0 0 1-1.75 1.75H14a1.75 1.75 0 0 1-1.75-1.75V4.09a1.75 1.75 0 0 0-1.75-1.75H8a1.75 1.75 0 0 0-1.75 1.75v1.27a1.75 1.75 0 0 1-1.75 1.75H2a1.75 1.75 0 0 1-1.75-1.75V4.09a1.75 1.75 0 0 0-1.75-1.75H2a1.75 1.75 0 0 0 1.75 1.75v1.27a1.75 1.75 0 0 1 1.75 1.75h2a1.75 1.75 0 0 1 1.75-1.75V4.09a1.75 1.75 0 0 0 1.75-1.75h2a1.75 1.75 0 0 0 1.75 1.75v1.27a1.75 1.75 0 0 1 1.75 1.75h2a1.75 1.75 0 0 1 1.75-1.75V4.09a1.75 1.75 0 0 0 1.75-1.75h2a1.75 1.75 0 0 0 1.75 1.75v1.27a1.75 1.75 0 0 1 1.75 1.75h2a1.75 1.75 0 0 1 1.75-1.75V4.09a1.75 1.75 0 0 0 1.75-1.75h2a1.75 1.75 0 0 0 1.75 1.75v1.27a1.75 1.75 0 0 1 1.75 1.75h2a1.75 1.75 0 0 1 1.75-1.75V4.09a1.75 1.75 0 0 0-1.75-1.75h-2a1.75 1.75 0 0 0-1.75 1.75v1.27a1.75 1.75 0 0 1-1.75 1.75h-2a1.75 1.75 0 0 1-1.75-1.75V4.09a1.75 1.75 0 0 0-1.75-1.75h-2a1.75 1.75 0 0 0-1.75 1.75v1.27a1.75 1.75 0 0 1-1.75 1.75h-2a1.75 1.75 0 0 1-1.75-1.75V4.09a1.75 1.75 0 0 0-1.75-1.75z"/>
-        </symbol>
-        <symbol id="icon-sun" viewBox="0 0 24 24">
-            <path d="M12 2.25c-5.39 0-9.75 4.36-9.75 9.75s4.36 9.75 9.75 9.75 9.75-4.36 9.75-9.75S17.39 2.25 12 2.25zm0 15c-2.76 0-5.25-2.49-5.25-5.25s2.49-5.25 5.25-5.25 5.25 2.49 5.25 5.25-2.49 5.25-5.25 5.25zm0-12c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-        </symbol>
-        <symbol id="icon-trash" viewBox="0 0 24 24">
-            <path d="M14.5 12.5L16 14l1.5-1.5L16 11l-1.5-1.5L14.5 11l-1.5 1.5L14.5 14l1.5 1.5L14.5 12.5zM10 12.5L8.5 14 7 12.5 8.5 11 10 12.5zM12 16l-1.5 1.5L12 19l1.5-1.5L12 16zm-7-10v12h14V6H5zm14 0H5v12h14V6z"/>
-        </symbol>
-        <symbol id="icon-share" viewBox="0 0 24 24">
-            <path d="M18 16.08c0 1.1-.9 2-2 2s-2-.9-2-2V7L7 11v9c0 1.1-.9 2-2 2s-2-.9-2-2V5c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v11z"/>
-        </symbol>
-    </svg>
-
     <div class="top-controls">
         <div class="control-group">
             <select id="theme-style" class="compact-select">
                 <option value="ocean">🌊 Ocean</option>
-                <option value="forest">🌲 Forest</option>                <option value="standard">📋 Standard</option>
+                <option value="forest">🌲 Forest</option>
+                <option value="standard">📋 Standard</option>
             </select>
         </div>
         <div class="control-group">
-            <button class="icon-btn" id="theme-btn" title="Тема">
-                <span class="icon icon-moon"><svg><use href="#icon-moon"/></svg></span>
-            </button>
-            <button class="icon-btn" id="toggle-all-btn" title="Свернуть все">
-                <span class="icon icon-compress"><svg><use href="#icon-compress"/></svg></span>
-            </button>
+            <button class="icon-btn" id="theme-btn">🌙</button>
+            <button class="icon-btn" id="toggle-all-btn">⏷</button>
         </div>
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" id="tab-btn-calc">
-            <span class="icon icon-calculator"><svg><use href="#icon-calculator"/></svg></span>
-            Калькулятор
-        </button>
-        <button class="tab-btn" id="tab-btn-setup">
-            <span class="icon icon-tools"><svg><use href="#icon-tools"/></svg></span>
-            Для наладчика
-        </button>
+        <button class="tab-btn active" id="tab-btn-calc">🧮 Калькулятор</button>
+        <button class="tab-btn" id="tab-btn-setup">🔧 Для наладчика</button>
     </div>
 
     <div class="container">
         <div id="tab-calc" class="tab-content active">
             <div id="tpa-container"></div>
-            <button class="reset-btn" id="reset-btn">
-                <span class="icon icon-trash"><svg><use href="#icon-trash"/></svg></span>
-                Очистить все данные
-            </button>
+            <button class="reset-btn" id="reset-btn">🗑️ Очистить все данные</button>
         </div>
 
         <div id="tab-setup" class="tab-content">
             <div class="summary-list" id="summary-container"></div>
-            <button class="share-btn" id="share-btn">
-                <span class="icon icon-share"><svg><use href="#icon-share"/></svg></span>
-                Поделиться отчётом
-            </button>
+            <button class="share-btn" id="share-btn">📤 Поделиться отчётом</button>
         </div>
     </div>
 <script>
@@ -573,20 +475,17 @@
                 
                 html += '<div class="tpa-card' + (isCollapsed ? ' tpa-collapsed' : '') + '" data-tpa="' + tpa + '">' +
                     '<div class="tpa-toggle-container">' +
-                        '<label class="tpa-toggle-label">' + tpa + '</label>' +
-                        '<label class="tpa-toggle-switch">' +
-                            '<input type="checkbox" class="tpa-collapse-checkbox" data-tpa="' + tpa + '" ' + (isCollapsed ? 'checked' : '') + '>' +
-                            '<span class="slider"></span>' +
-                        '</label>' +
-                    '</div>' +                    '<div class="tpa-header">' +
+                        '<span>' + tpa + '</span>' +
+                        '<input type="checkbox" class="tpa-collapse-checkbox" data-tpa="' + tpa + '" ' + (isCollapsed ? 'checked' : '') + '>' +
+                    '</div>' +
+                    '<div class="tpa-header">' +
                         '<span>Данные</span>' +
-                        '<div class="tpa-mini-result" id="res-' + i + '">' +
-                            '<div class="good">0 шт</div>' +
+                        '<div class="tpa-mini-result" id="res-' + i + '">' +                            '<div class="good">0 шт</div>' +
                         '</div>' +
                     '</div>' +
                     '<div class="form-row">' +
                         '<div class="form-group full-width">' +
-                            '<label><span class="icon icon-calculator"><svg><use href="#icon-calculator"/></svg></span> Материал</label>' +
+                            '<label>Материал</label>' +
                             '<select class="calc-input" data-idx="' + i + '" data-field="mat">' +
                                 matOptions +
                             '</select>' +
@@ -594,28 +493,28 @@
                     '</div>' +
                     '<div class="form-row">' +
                         '<div class="form-group">' +
-                            '<label style="color: var(--success);"><span class="icon icon-calculator"><svg><use href="#icon-calculator"/></svg></span> Готовые: шт. в кор.</label>' +
+                            '<label>Готовые: шт. в кор.</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="perBox" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                         '<div class="form-group">' +
-                            '<label style="color: var(--success);"><span class="icon icon-calculator"><svg><use href="#icon-calculator"/></svg></span> Готовые: кол-во кор.</label>' +
+                            '<label>Готовые: кол-во кор.</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="boxes" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                     '</div>' +
                     '<div class="form-row">' +
                         '<div class="form-group">' +
-                            '<label style="color: var(--danger);"><span class="icon icon-trash"><svg><use href="#icon-trash"/></svg></span> Брак (шт)</label>' +
+                            '<label>Брак (шт)</label>' +
                             '<input type="number" class="calc-input input-defect" data-idx="' + i + '" data-field="defect" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                         '<div class="form-group">' +
-                            '<label><span class="icon icon-share"><svg><use href="#icon-share"/></svg></span> Вес 1 дет. (г)</label>' +
+                            '<label>Вес 1 дет. (г)</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">' +
                         '</div>' +
                     '</div>' +
                     '<div class="batch-section">' +
                         '<div class="batch-info" id="batch-info-' + i + '">Партия: 0 шт / 0.000 кг</div>' +
                         '<div class="form-group full-width">' +
-                            '<label style="color: var(--warning);"><span class="icon icon-tools"><svg><use href="#icon-tools"/></svg></span> Всего за партию (шт)</label>' +
+                            '<label>Всего за партию (шт)</label>' +
                             '<input type="number" class="calc-input input-batch" data-idx="' + i + '" data-field="batchTotal" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                     '</div>' +
@@ -627,10 +526,10 @@
             
             var inputs = document.querySelectorAll('.calc-input');
             for (var k = 0; k < inputs.length; k++) {
-                inputs[k].addEventListener('input', function() {                    calculateAll();
+                inputs[k].addEventListener('input', function() {
+                    calculateAll();
                     saveData();
-                });
-            }
+                });            }
             
             // Сворачивание
             var collapseCheckboxes = document.querySelectorAll('.tpa-collapse-checkbox');
@@ -676,10 +575,10 @@
                 });
             }
             if (tabBtnSetup) {
-                tabBtnSetup.addEventListener('click', function() {                    switchTab('setup');
+                tabBtnSetup.addEventListener('click', function() {
+                    switchTab('setup');
                 });
-            }
-            
+            }            
             calculateAll();
         }
 
@@ -725,15 +624,10 @@
             updateThemeIcon(next);
         }
 
-        function updateThemeIcon(theme) {            var btn = document.getElementById('theme-btn');
+        function updateThemeIcon(theme) {
+            var btn = document.getElementById('theme-btn');
             if (btn) {
-                var use = btn.querySelector('svg use');
-                if (theme === 'light') {
-                    use.setAttribute('href', '#icon-moon');
-                } else {
-                    use.setAttribute('href', '#icon-sun');
-                }
-            }
+                btn.textContent = theme === 'light' ? '🌙' : '☀️';            }
         }
 
         function saveData() {
@@ -881,7 +775,7 @@ function calculateAll() {
                         shareBtn.classList.add('visible');
                     }
                 } else {
-                    summaryContainer.innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
+                    summaryContainer.innerHTML = '<div class="empty-hint" style="text-align:center; padding:20px; color:var(--text-secondary);">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
                     
                     if (shareBtn) {
                         shareBtn.classList.remove('visible');
@@ -982,7 +876,7 @@ function calculateAll() {
             modal.style.cssText = `
                 position: fixed;
                 top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.7);
+                background: rgba(0,0,0,0.6);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -991,52 +885,42 @@ function calculateAll() {
             modal.innerHTML = `
                 <div style="
                     background: var(--card);
-                    border-radius: 24px;
-                    padding: 24px;
+                    border-radius: 16px;
+                    padding: 20px;
                     max-width: 95%;
-                    width: 420px;
-                    box-shadow: 0 24px 40px rgba(0,0,0,0.2);
-                    backdrop-filter: blur(12px);
-                    border: 1px solid var(--glass-border);
+                    width: 400px;
+                    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+                    border: 1px solid var(--border);
                 ">
                 <h3 style="color: var(--primary); margin-top: 0;">📤 Поделиться отчётом</h3>
-                <textarea id="report-text" rows="6" style="
+                <textarea id="report-text" rows="5" style="
                     width: 100%;
-                    padding: 16px;
+                    padding: 12px;
                     border: 1px solid var(--border);
-                    border-radius: 16px;
+                    border-radius: 10px;
                     font-size: 14px;
                     background: var(--bg);
                     color: var(--text);
                     resize: none;
-                ">${report}</textarea>                <div style="display: flex; gap: 12px; margin-top: 20px;">
-                    <button class="btn-copy" style="
+                ">${report}</textarea>
+                <div style="display: flex; gap: 10px; margin-top: 16px;">                    <button class="btn-copy" style="
                         flex: 1;
-                        padding: 14px;
+                        padding: 12px;
                         background: var(--success);
                         color: white;
                         border: none;
-                        border-radius:16px;
+                        border-radius: 10px;
                         font-weight: 600;
                     ">📋 Скопировать</button>
                     <button class="btn-whatsapp" style="
                         flex: 1;
-                        padding: 14px;
+                        padding: 12px;
                         background: #25D366;
                         color: white;
                         border: none;
-                        border-radius:16px;
+                        border-radius: 10px;
                         font-weight: 600;
                     ">💬 WhatsApp</button>
-                    <button class="btn-tg" style="
-                        flex: 1;
-                        padding: 14px;
-                        background: #0088cc;
-                        color: white;
-                        border: none;
-                        border-radius:16px;
-                        font-weight: 600;
-                    ">✈️ Telegram</button>
                 </div>
                 </div>
             `;
@@ -1045,7 +929,6 @@ function calculateAll() {
             var textArea = modal.querySelector('#report-text');
             var btnCopy = modal.querySelector('.btn-copy');
             var btnWhatsApp = modal.querySelector('.btn-whatsapp');
-            var btnTg = modal.querySelector('.btn-tg');
 
             btnCopy.onclick = function() {
                 navigator.clipboard.writeText(report).then(() => {
@@ -1057,10 +940,6 @@ function calculateAll() {
             btnWhatsApp.onclick = function() {
                 var encoded = encodeURIComponent(report);
                 window.open(`https://web.whatsapp.com/send?text=${encoded}`, '_blank');
-            };
-            btnTg.onclick = function() {
-                var encoded = encodeURIComponent(report);
-                window.open(`https://t.me/share/url?url=&text=${encoded}`, '_blank');
             };
 
             modal.addEventListener('click', function(e) {
