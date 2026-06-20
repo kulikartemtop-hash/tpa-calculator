@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
             --success: #22c55e;
             --danger: #f87171;
             --warning: #f97316;
-            --shadow: 0 12px 30px -10px rgba(56, 189, 248, 0.3);
+            --shadow: 0 16px 40px -15px rgba(56, 189, 248, 0.35);
             --glass: rgba(15, 23, 42, 0.6);
             --glass-border: rgba(56, 189, 248, 0.3);
             --bg-image: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
@@ -132,22 +132,102 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* === ПРЕМИУМ КАРТОЧКИ ТПА === */
         .tpa-card {
             background: var(--card);
             border-radius: 24px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid var(--border);
-            border-left: 6px solid var(--primary);
+            border: 1px solid var(--glass-border);
             box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(12px);
+            transition: transform 0.4s cubic-bezier(0.17, 0.67, 0.88, 1.01), box-shadow 0.4s;
             position: relative;
             overflow: hidden;
+            border-left: 4px solid var(--primary);
         }
+        .tpa-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(34, 197, 94, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
         .tpa-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 32px -12px rgba(56, 189, 248, 0.25);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -18px rgba(56, 189, 248, 0.4);
+        }
+
+        .tpa-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Сворачивание */
+        .tpa-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(56, 189, 248, 0.08);
+            transition: all 0.4s cubic-bezier(0.17, 0.67, 0.88, 1.01);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        .tpa-toggle-container::before {
+            content: "▾";
+            font-size: 18px;
+            color: var(--primary);
+            width: 24px;
+            text-align: center;
+            transition: transform 0.4s;
+        }
+
+        .tpa-collapsed .tpa-toggle-container::before {
+            content: "▴";
+            transform: rotate(180deg);
+        }
+
+        .tpa-collapsed {
+            height: 56px !important;
+            overflow: hidden;            padding-bottom: 0 !important;
+            border-radius: 16px;
+            border: 1px solid var(--warning);
+            transition: all 0.4s cubic-bezier(0.17, 0.67, 0.88, 1.01);
+            opacity: 0.95;
+            transform: scaleY(1);
+        }
+
+        .tpa-collapsed .tpa-header {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .tpa-collapsed .form-row,
+        .tpa-collapsed .batch-section {
+            display: none;
+        }
+
+        .tpa-collapsed .tpa-mini-result {
+            display: block;
+            text-align: left;
+            font-size: 0.75rem;
+            margin: 6px 0 0;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .tpa-collapsed .tpa-mini-result .good {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .tpa-collapsed .tpa-mini-result .defect {
+            color: var(--danger);
+            font-weight: 600;
         }
 
         .tpa-header {
@@ -163,8 +243,7 @@
         }
 
         .tpa-mini-result {
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.85rem;            font-weight: 600;
             text-align: right;
             line-height: 1.6;
             color: var(--text-secondary);
@@ -194,7 +273,8 @@
             padding: 16px;
             border: 1px solid var(--border);
             border-radius: 16px;
-            font-size: 16px;            background: rgba(30, 41, 59, 0.5);
+            font-size: 16px;
+            background: rgba(30, 41, 59, 0.5);
             color: var(--text);
             width: 100%;
             transition: all 0.3s;
@@ -212,8 +292,7 @@
             background: rgba(30, 41, 59, 0.4);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 14px;
-            margin-top: 14px;
+            padding: 14px;            margin-top: 14px;
         }
 
         .batch-info {
@@ -243,7 +322,8 @@
             transition: background 0.3s;
         }
 
-        .summary-item:hover { background: rgba(56, 189, 248, 0.08); }        .summary-item:last-child { border-bottom: none; }
+        .summary-item:hover { background: rgba(56, 189, 248, 0.08); }
+        .summary-item:last-child { border-bottom: none; }
         
         .summary-tpa {
             font-weight: 700;
@@ -261,8 +341,7 @@
 
         .reset-btn {
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
+            padding: 18px;            background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
             color: white;
             border: none;
             border-radius:20px;
@@ -292,7 +371,8 @@
             margin-bottom: 24px;
             box-shadow: 0 12px 24px -8px rgba(29, 78, 216, 0.3);
             cursor: pointer;
-            transition: all 0.3s;            display: flex;
+            transition: all 0.3s;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
@@ -300,66 +380,6 @@
         }
 
         .share-btn.visible { display: flex; }
-
-        /* Сворачивание */
-        .tpa-toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding: 10px;
-            border-radius: 14px;
-            background: rgba(56, 189, 248, 0.1);
-            transition: all 0.3s;
-        }
-
-        .tpa-toggle-container::before {
-            content: "▾";
-            font-size: 18px;
-            color: var(--primary);
-            width: 20px;
-            text-align: center;
-        }
-
-        .tpa-collapsed .tpa-toggle-container::before {
-            content: "▴";
-        }
-
-        .tpa-collapsed {
-            height: 56px !important;
-            overflow: hidden;
-            padding-bottom: 0 !important;
-            border-radius: 16px;
-            border: 1px solid var(--warning);
-            transition: all 0.3s ease;
-            opacity: 0.95;
-        }
-
-        .tpa-collapsed .tpa-header {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .tpa-collapsed .form-row,
-        .tpa-collapsed .batch-section {            display: none;
-        }
-
-        .tpa-collapsed .tpa-mini-result {
-            display: block;
-            text-align: left;
-            font-size: 0.75rem;
-            margin-top: 6px;
-            color: var(--text);
-        }
-
-        .tpa-collapsed .tpa-mini-result .good {
-            color: var(--success);
-            font-weight: 600;
-        }
-        .tpa-collapsed .tpa-mini-result .defect {
-            color: var(--danger);
-            font-weight: 600;
-        }
     </style>
 </head>
 <body>
@@ -370,8 +390,7 @@
                 <option value="ocean">🌊 Ocean Premium</option>
             </select>
         </div>
-        <div class="control-group">
-            <button class="icon-btn" id="theme-btn">☀️</button>
+        <div class="control-group">            <button class="icon-btn" id="theme-btn">☀️</button>
             <button class="icon-btn" id="toggle-all-btn">⏷</button>
         </div>
     </div>
@@ -390,7 +409,8 @@
         <div id="tab-setup" class="tab-content">
             <div class="summary-list" id="summary-container"></div>
             <button class="share-btn" id="share-btn">📤 Поделиться отчётом</button>
-        </div>    </div>
+        </div>
+    </div>
 <script>
         var TPA_LIST = [
             "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6",
@@ -400,13 +420,11 @@
         var MATERIALS = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
         function init() {
-            var savedTheme = localStorage.getItem('tpa_theme') || 'light';
+            var savedTheme = localStorage.getItem('tpa_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             
             var wpSelect = document.getElementById('wallpaper-select');
-            if (wpSelect) {
-                wpSelect.disabled = true;
-            }
+            if (wpSelect) wpSelect.disabled = true;
             
             updateThemeIcon(savedTheme);
 
@@ -440,9 +458,9 @@
                             '<label>Материал</label>' +
                             '<select class="calc-input" data-idx="' + i + '" data-field="mat">' +
                                 matOptions +
-                            '</select>' +                        '</div>' +
-                    '</div>' +
-                    '<div class="form-row">' +
+                            '</select>' +
+                        '</div>' +
+                    '</div>' +                    '<div class="form-row">' +
                         '<div class="form-group">' +
                             '<label>Готовые: шт. в кор.</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="perBox" inputmode="numeric" placeholder="0">' +
@@ -489,9 +507,9 @@
                 collapseCheckboxes[l].addEventListener('change', function() {
                     var tpa = this.getAttribute('data-tpa');
                     var card = document.querySelector('[data-tpa="' + tpa + '"]');
-                    if (this.checked) {                        card.classList.add('tpa-collapsed');
-                    } else {
-                        card.classList.remove('tpa-collapsed');
+                    if (this.checked) {
+                        card.classList.add('tpa-collapsed');
+                    } else {                        card.classList.remove('tpa-collapsed');
                     }
                     saveCollapsed();
                     calculateAll();
@@ -538,9 +556,9 @@
             var checkboxes = document.querySelectorAll('.tpa-collapse-checkbox');
             var allCollapsed = true;
             for (var i = 0; i < checkboxes.length; i++) {
-                if (!checkboxes[i].checked) {                    allCollapsed = false;
-                    break;
-                }
+                if (!checkboxes[i].checked) {
+                    allCollapsed = false;
+                    break;                }
             }
             
             for (var j = 0; j < checkboxes.length; j++) {
@@ -587,9 +605,9 @@
             var dataToSave = {};
             for (var i = 0; i < inputs.length; i++) {
                 var input = inputs[i];
-                var idx = input.getAttribute('data-idx');                var field = input.getAttribute('data-field');
-                if (!dataToSave[idx]) dataToSave[idx] = {};
-                dataToSave[idx][field] = input.value;
+                var idx = input.getAttribute('data-idx');
+                var field = input.getAttribute('data-field');
+                if (!dataToSave[idx]) dataToSave[idx] = {};                dataToSave[idx][field] = input.value;
             }
             localStorage.setItem('tpa_calc_data', JSON.stringify(dataToSave));
         }
