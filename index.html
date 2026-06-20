@@ -1,31 +1,71 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="dark">
+<html lang="ru" data-theme="light" data-wallpaper="1">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TPA Premium Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            --bg: #f0f9ff;
+            --card: rgba(255, 255, 255, 0.9);
+            --text: #1e3a8a;
+            --text-secondary: #4b5563;
+            --border: #bae6fd;
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+
+        [data-theme="dark"] {
             --bg: #0c1e3e;
-            --card: rgba(15, 23, 42, 0.85);
-            --text: #ffffff;
+            --card: rgba(30, 64, 175, 0.2);
+            --text: #dbeafe;
             --text-secondary: #cbd5e1;
             --border: #1e40af;
             --primary: #38bdf8;
             --primary-dark: #0ea5e9;
-            --success: #22c55e;
+            --success: #34d399;
             --danger: #f87171;
-            --warning: #f97316;
-            --shadow: 0 16px 40px -15px rgba(56, 189, 248, 0.35);
-            --glass: rgba(15, 23, 42, 0.6);
-            --glass-border: rgba(56, 189, 248, 0.3);
-            --bg-image: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
+            --warning: #fbbf24;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
+            --glass-bg: rgba(15, 23, 42, 0.35);
+            --glass-border: rgba(30, 64, 175, 0.3);
+        }
+
+        [data-wallpaper="1"] body { 
+            background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+            background-attachment: fixed;
+        }
+        [data-theme="dark"][data-wallpaper="1"] body { 
+            background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
+        }
+        
+        [data-wallpaper="2"] body { 
+            background: radial-gradient(circle at 10% 20%, #e0f2fe 0%, #bae6fd 90%);            background-attachment: fixed;
+        }
+        [data-theme="dark"][data-wallpaper="2"] body { 
+            background: radial-gradient(circle at 10% 20%, #1e3a8a 0%, #0c1e3e 90%);
+        }
+        
+        [data-wallpaper="3"] body { 
+            background: linear-gradient(45deg, #dbeafe 30%, #bae6fd 100%);
+            background-attachment: fixed;
+        }
+        [data-theme="dark"][data-wallpaper="3"] body { 
+            background: linear-gradient(45deg, #1e3a8a 30%, #0c4a6e 100%);
         }
 
         * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--text);
             margin: 0;
             padding: 0;
             font-size: 15px;
@@ -33,170 +73,391 @@
             transition: background 0.5s ease, color 0.3s ease;
             min-height: 100vh;
             backdrop-filter: blur(10px);
-            background: var(--bg-image);
-            background-attachment: fixed;
-            color: var(--text);
         }
 
         .top-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 18px;
-            background: var(--card);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin: 12px;
-            position: sticky;            top: 8px;
-            z-index: 101;
-            backdrop-filter: blur(12px);
+            padding: 12px 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin: 10px;
+            position: sticky;
+            top: 8px;
+            z-index: 101;
         }
 
         .control-group {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             align-items: center;
         }
-
         .icon-btn {
-            width: 44px;
-            height: 44px;
-            background: var(--glass);
+            background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 18px;
-            color: var(--text);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .icon-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            background: var(--card);
-        }
+        .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); }
 
         .compact-select {
-            padding: 12px 16px;
-            border-radius: 16px;
+            padding: 10px 14px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--card);
             color: var(--text);
-            font-size: 0.95rem;
-            min-width: 160px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+            min-width: 140px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .tabs {
             display: flex;
-            background: var(--card);
-            border-radius: 20px;
-            margin: 12px;
-            overflow: hidden;            box-shadow: var(--shadow);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            margin: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
         }
 
         .tab-btn {
             flex: 1;
-            padding: 18px;
+            padding: 16px;
             border: none;
             background: transparent;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-secondary);
             cursor: pointer;
-            border-bottom: 4px solid transparent;
-            display: flex;
-            align-items: center;
+            border-bottom: 3px solid transparent;
+            display: flex;            align-items: center;
             justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
+            gap: 8px;
+            transition: all 0.3s;
         }
 
         .tab-btn.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
-            background: var(--glass);
+            background: rgba(14, 165, 233, 0.1);
         }
 
         .container {
-            padding: 16px;
-            max-width: 680px;
+            padding: 12px;
+            max-width: 650px;
             margin: 0 auto;
         }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* === ПРЕМИУМ КАРТОЧКИ ТПА === */
         .tpa-card {
             background: var(--card);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
             box-shadow: var(--shadow);
-            backdrop-filter: blur(12px);
-            transition: transform 0.4s cubic-bezier(0.17, 0.67, 0.88, 1.01), box-shadow 0.4s;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
             overflow: hidden;
-            border-left: 4px solid var(--primary);
         }
+
         .tpa-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(34, 197, 94, 0.05) 100%);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
             opacity: 0;
-            transition: opacity 0.4s;
+            transition: opacity 0.3s;
             z-index: -1;
         }
 
-        .tpa-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px -18px rgba(56, 189, 248, 0.4);
+        .tpa-card:hover::before { opacity: 1; }
+        .tpa-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -6px rgba(0, 0, 0, 0.1); }
+        .tpa-header {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .tpa-card:hover::before { opacity: 1; }
+        .tpa-mini-result {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: right;
+            line-height: 1.5;
+        }
 
-        /* Сворачивание */
+        .tpa-mini-result .good { color: var(--success); }
+        .tpa-mini-result .defect { color: var(--danger); }
+        .tpa-mini-result .batch { color: var(--warning); }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        select, input {
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 16px;
+            background: var(--bg);            color: var(--text);
+            width: 100%;
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--card);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        .input-defect {
+            border-color: #fecaca !important;
+            background-color: rgba(239, 68, 68, 0.08) !important;
+        }
+
+        .input-defect:focus { border-color: var(--danger) !important; }
+
+        .input-batch {
+            border-color: #fde68a !important;
+            background-color: rgba(245, 158, 11, 0.08) !important;
+        }
+
+        .input-batch:focus { border-color: var(--warning) !important; }
+
+        .batch-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .batch-info {
+            font-size: 0.9rem;
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .summary-list {
+            background: var(--card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .summary-item:hover { background: rgba(14, 165, 233, 0.05); }
+        .summary-item:last-child { border-bottom: none; }
+        
+        .summary-tpa {
+            font-weight: 700;
+            color: var(--primary-dark);
+            min-width: 100px;
+            font-size: 1rem;
+        }
+
+        .summary-data {
+            text-align: right;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .summary-data .parts { font-weight: 600; color: var(--text); }
+        .summary-data .weight-good { color: var(--success); font-weight: 600; }
+        .summary-data .weight-defect { color: var(--danger); font-weight: 600; }
+        .summary-data .weight-total { color: var(--text-secondary); font-size: 0.85rem; }
+        .summary-data .batch-info { color: var(--warning); font-weight: 600; }
+        
+        .material-summary-header {
+            padding: 16px 18px;
+            font-weight: 700;
+            background: rgba(16, 185, 129, 0.15);
+            border-bottom: 1px solid var(--border);
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        .material-item { background: rgba(16, 185, 129, 0.08); }
+        .material-item .summary-tpa { color: var(--success); }
+        .material-item .parts { color: var(--success); font-size: 1rem; }
+
+        .empty-hint {
+            text-align: center;            color: var(--text-secondary);
+            padding: 40px 20px;
+            font-style: italic;
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3), 0 4px 6px -2px rgba(239, 68, 68, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .reset-btn:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.4), 0 10px 10px -6px rgba(239, 68, 68, 0.2); }
+        .reset-btn:active { transform: translateY(0); }
+
+        .share-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3), 0 4px 6px -2px rgba(14, 165, 233, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;            display: none;
+        }
+
+        .share-btn.visible { display: flex; }
+        .share-btn:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(14, 165, 233, 0.4), 0 10px 10px -6px rgba(14, 165, 233, 0.2); }
+        .share-btn:active { transform: translateY(0); }
+
+        /* Сворачивание ТПА */
         .tpa-toggle-container {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-            padding: 12px;
-            border-radius: 16px;
-            background: rgba(56, 189, 248, 0.08);
-            transition: all 0.4s cubic-bezier(0.17, 0.67, 0.88, 1.01);
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 10px;
+            background: rgba(14, 165, 233, 0.1);
         }
 
-        .tpa-toggle-container::before {
-            content: "▾";
-            font-size: 18px;
-            color: var(--primary);
-            width: 24px;
-            text-align: center;
-            transition: transform 0.4s;
+        .tpa-toggle-label {
+            font-size: 0.9rem;
+            color: var(--text);
+            font-weight: 500;
         }
 
-        .tpa-collapsed .tpa-toggle-container::before {
-            content: "▴";
-            transform: rotate(180deg);
+        .tpa-toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
         }
+
+        .tpa-toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(26px); }
 
         .tpa-collapsed {
-            height: 56px !important;
+            height: 52px !important;
             overflow: hidden;
             padding-bottom: 0 !important;
-            border-radius: 16px;            border: 1px solid var(--warning);
-            transition: all 0.4s cubic-bezier(0.17, 0.67, 0.88, 1.01);
-            opacity: 0.95;
+            border-radius: 12px;
         }
 
         .tpa-collapsed .tpa-header {
@@ -212,196 +473,37 @@
         .tpa-collapsed .tpa-mini-result {
             display: block;
             text-align: left;
-            font-size: 0.75rem;
-            margin: 6px 0 0;
-            color: var(--text);
-            line-height: 1.4;
+            font-size: 0.7rem;
+            margin-top: 4px;
         }
 
-        .tpa-collapsed .tpa-mini-result .good { color: var(--success); font-weight: 600; }
-        .tpa-collapsed .tpa-mini-result .defect { color: var(--danger); font-weight: 600; }
-
-        .tpa-header {
-            font-weight: 800;
-            font-size: 1.3rem;
-            color: var(--primary);
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .tpa-mini-result {
-            font-size: 0.85rem;
+        .tpa-collapsed .tpa-mini-result .good {
+            color: var(--success);
             font-weight: 600;
-            text-align: right;
-            line-height: 1.6;
-            color: var(--text-secondary);
         }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;            gap: 14px;
-            margin-bottom: 14px;
-        }
-
-        .form-group { display: flex; flex-direction: column; }
-        .form-group.full-width { grid-column: 1 / -1; }
-        
-        label {
-            font-size: 0.9rem;
+        .tpa-collapsed .tpa-mini-result .defect {
+            color: var(--danger);
             font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-
-        select, input {
-            padding: 16px;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            font-size: 16px;
-            background: rgba(30, 41, 59, 0.5);
-            color: var(--text);
-            width: 100%;
-            transition: all 0.3s;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: var(--card);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
-        }
-
-        .batch-section {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 14px;
-            margin-top: 14px;
-        }
-
-        .batch-info {
-            font-size: 0.95rem;
+        .tpa-collapsed .tpa-mini-result .batch {
             color: var(--warning);
             font-weight: 600;
-            margin-bottom: 10px;
-            text-align: center;        }
-
-        .summary-list {
-            background: var(--card);
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-bottom: 24px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.3s;
-        }
-
-        .summary-item:hover { background: rgba(56, 189, 248, 0.08); }
-        .summary-item:last-child { border-bottom: none; }
-        
-        .summary-tpa {
-            font-weight: 700;
-            color: var(--primary);
-            min-width: 110px;
-            font-size: 1.1rem;
-        }
-
-        .summary-data {
-            text-align: right;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-
-        .reset-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
-            color: white;
-            border: none;
-            border-radius:20px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 24px;
-            margin-bottom: 48px;
-            box-shadow: 0 12px 24px -8px rgba(185, 28, 28, 0.3);            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .share-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius:20px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 12px 24px -8px rgba(29, 78, 216, 0.3);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            display: none;
-        }
-
-        .share-btn.visible { display: flex; }
-    </style>
+        }    </style>
 </head>
 <body>
 
     <div class="top-controls">
         <div class="control-group">
             <select id="wallpaper-select" class="compact-select">
-                <option value="ocean">🌊 Ocean Premium</option>
+                <option value="1">🎨 Фон: Ocean</option>
+                <option value="2">🌅 Фон: Sunrise</option>
+                <option value="3">🌌 Фон: Galaxy</option>
             </select>
         </div>
         <div class="control-group">
-            <button class="icon-btn" id="theme-btn">☀️</button>
-            <button class="icon-btn" id="toggle-all-btn">⏷</button>
+            <button class="icon-btn" id="theme-btn" title="Тема"><i class="fas fa-moon"></i></button>
+            <button class="icon-btn" id="toggle-all-btn" title="Свернуть все"><i class="fas fa-compress-alt"></i></button>
         </div>
-    </div>
-
-    <div class="tabs">
-        <button class="tab-btn active" id="tab-btn-calc">🧮 Калькулятор</button>
-        <button class="tab-btn" id="tab-btn-setup">🔧 Для наладчика</button>
-    </div>
-    <div class="container">
-        <div id="tab-calc" class="tab-content active">
-            <div id="tpa-container"></div>
-            <button class="reset-btn" id="reset-btn">🗑️ Очистить все данные</button>
-        </div>
-
-        <div id="tab-setup" class="tab-content">
-            <div class="summary-list" id="summary-container"></div>
-            <button class="share-btn" id="share-btn">📤 Поделиться отчётом</button>
-        </div>
-    </div>
 <script>
         var TPA_LIST = [
             "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6",
@@ -411,12 +513,18 @@
         var MATERIALS = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
         function init() {
-            var savedTheme = localStorage.getItem('tpa_theme') || 'dark';
+            var savedTheme = localStorage.getItem('tpa_theme') || 'light';
+            var savedWallpaper = localStorage.getItem('tpa_wallpaper') || '1';
+            var savedCollapsed = JSON.parse(localStorage.getItem('tpa_collapsed')) || {};
             document.documentElement.setAttribute('data-theme', savedTheme);
+            document.documentElement.setAttribute('data-wallpaper', savedWallpaper);
             
             var wpSelect = document.getElementById('wallpaper-select');
             if (wpSelect) {
-                wpSelect.disabled = true;
+                wpSelect.value = savedWallpaper;
+                wpSelect.addEventListener('change', function() {
+                    changeWallpaper(this.value);
+                });
             }
             
             updateThemeIcon(savedTheme);
@@ -430,53 +538,58 @@
             var html = '';
             for (var i = 0; i < TPA_LIST.length; i++) {
                 var tpa = TPA_LIST[i];
+                var isCollapsed = savedCollapsed[tpa] === true;
+                
                 var matOptions = '';
                 for (var j = 0; j < MATERIALS.length; j++) {
                     matOptions += '<option value="' + MATERIALS[j] + '">' + MATERIALS[j] + '</option>';
                 }
                 
-                html += '<div class="tpa-card" data-tpa="' + tpa + '">' +
+                html += '<div class="tpa-card' + (isCollapsed ? ' tpa-collapsed' : '') + '" data-tpa="' + tpa + '">' +
                     '<div class="tpa-toggle-container">' +
-                        '<span>' + tpa + '</span>' +
-                        '<input type="checkbox" class="tpa-collapse-checkbox" data-tpa="' + tpa + '">' +
+                        '<label class="tpa-toggle-label">' + tpa + '</label>' +
+                        '<label class="tpa-toggle-switch">' +
+                            '<input type="checkbox" class="tpa-collapse-checkbox" data-tpa="' + tpa + '" ' + (isCollapsed ? 'checked' : '') + '>' +
+                            '<span class="slider"></span>' +
+                        '</label>' +
                     '</div>' +
-                    '<div class="tpa-header">' +
-                        '<span>Данные</span>' +
+                    '<div class="tpa-header">' +                        '<span>Данные</span>' +
                         '<div class="tpa-mini-result" id="res-' + i + '">' +
                             '<div class="good">0 шт</div>' +
                         '</div>' +
                     '</div>' +
                     '<div class="form-row">' +
                         '<div class="form-group full-width">' +
-                            '<label>Материал</label>' +
+                            '<label><i class="fas fa-cube"></i> Материал</label>' +
                             '<select class="calc-input" data-idx="' + i + '" data-field="mat">' +
                                 matOptions +
-                            '</select>' +                        '</div>' +
+                            '</select>' +
+                        '</div>' +
                     '</div>' +
                     '<div class="form-row">' +
                         '<div class="form-group">' +
-                            '<label>Готовые: шт. в кор.</label>' +
+                            '<label style="color: var(--success);"><i class="fas fa-box-open"></i> Готовые: шт. в кор.</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="perBox" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                         '<div class="form-group">' +
-                            '<label>Готовые: кол-во кор.</label>' +
+                            '<label style="color: var(--success);"><i class="fas fa-boxes"></i> Готовые: кол-во кор.</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="boxes" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                     '</div>' +
                     '<div class="form-row">' +
                         '<div class="form-group">' +
-                            '<label>Брак (шт)</label>' +
+                            '<label style="color: var(--danger);"><i class="fas fa-times-circle"></i> Брак (шт)</label>' +
                             '<input type="number" class="calc-input input-defect" data-idx="' + i + '" data-field="defect" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                         '<div class="form-group">' +
-                            '<label>Вес 1 дет. (г)</label>' +
+                            '<label><i class="fas fa-weight-hanging"></i> Вес 1 дет. (г)</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="weight" inputmode="decimal" step="0.001" placeholder="0.000">' +
                         '</div>' +
                     '</div>' +
                     '<div class="batch-section">' +
                         '<div class="batch-info" id="batch-info-' + i + '">Партия: 0 шт / 0.000 кг</div>' +
                         '<div class="form-group full-width">' +
-                            '<label>Всего за партию (шт)</label>' +
+                            '<label style="color: var(--warning);"><i class="fas fa-layer-group"></i> Всего за партию (шт)</label>' +
                             '<input type="number" class="calc-input input-batch" data-idx="' + i + '" data-field="batchTotal" inputmode="numeric" placeholder="0">' +
                         '</div>' +
                     '</div>' +
@@ -489,8 +602,7 @@
             var inputs = document.querySelectorAll('.calc-input');
             for (var k = 0; k < inputs.length; k++) {
                 inputs[k].addEventListener('input', function() {
-                    calculateAll();
-                    saveData();
+                    calculateAll();                    saveData();
                 });
             }
             
@@ -500,7 +612,8 @@
                 collapseCheckboxes[l].addEventListener('change', function() {
                     var tpa = this.getAttribute('data-tpa');
                     var card = document.querySelector('[data-tpa="' + tpa + '"]');
-                    if (this.checked) {                        card.classList.add('tpa-collapsed');
+                    if (this.checked) {
+                        card.classList.add('tpa-collapsed');
                     } else {
                         card.classList.remove('tpa-collapsed');
                     }
@@ -538,8 +651,7 @@
             }
             if (tabBtnSetup) {
                 tabBtnSetup.addEventListener('click', function() {
-                    switchTab('setup');
-                });
+                    switchTab('setup');                });
             }
             
             calculateAll();
@@ -549,7 +661,8 @@
             var checkboxes = document.querySelectorAll('.tpa-collapse-checkbox');
             var allCollapsed = true;
             for (var i = 0; i < checkboxes.length; i++) {
-                if (!checkboxes[i].checked) {                    allCollapsed = false;
+                if (!checkboxes[i].checked) {
+                    allCollapsed = false;
                     break;
                 }
             }
@@ -587,10 +700,14 @@
         }
 
         function updateThemeIcon(theme) {
-            var btn = document.getElementById('theme-btn');
-            if (btn) {
-                btn.textContent = theme === 'light' ? '☀️' : '🌙';
+            var btn = document.getElementById('theme-btn');            if (btn) {
+                btn.innerHTML = theme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
             }
+        }
+
+        function changeWallpaper(val) {
+            document.documentElement.setAttribute('data-wallpaper', val);
+            localStorage.setItem('tpa_wallpaper', val);
         }
 
         function saveData() {
@@ -598,7 +715,8 @@
             var dataToSave = {};
             for (var i = 0; i < inputs.length; i++) {
                 var input = inputs[i];
-                var idx = input.getAttribute('data-idx');                var field = input.getAttribute('data-field');
+                var idx = input.getAttribute('data-idx');
+                var field = input.getAttribute('data-field');
                 if (!dataToSave[idx]) dataToSave[idx] = {};
                 dataToSave[idx][field] = input.value;
             }
@@ -661,15 +779,17 @@ function calculateAll() {
                 var goodParts = d.perBox * d.boxes;
                 var defectParts = d.defect;
                 var batchParts = d.batchTotal;
+                
+                // Партия (вкл. смену) — только для отображения в карточке
                 var batchPartsToday = batchParts + goodParts;
                 
                 var goodWeightKg = (goodParts * d.weight) / 1000;
                 var defectWeightKg = (defectParts * d.weight) / 1000;
                 var totalWeightKg = goodWeightKg + defectWeightKg;
                 var batchWeightKg = (batchPartsToday * d.weight) / 1000;
-
                 var resEl = document.getElementById('res-' + k);
-                var batchInfoEl = document.getElementById('batch-info-' + k);                
+                var batchInfoEl = document.getElementById('batch-info-' + k);
+                
                 if (resEl) {
                     if (goodParts > 0 || defectParts > 0) {
                         var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
@@ -687,6 +807,7 @@ function calculateAll() {
                     batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + ((batchParts * d.weight) / 1000).toFixed(3) + ' кг';
                 }
 
+                // Проверяем, видима ли карточка (не свёрнута)
                 var card = document.querySelector('[data-tpa="' + tpa + '"]');
                 var isCardVisible = !card.classList.contains('tpa-collapsed');
 
@@ -702,6 +823,7 @@ function calculateAll() {
                         '</div>' +
                     '</div>';
 
+                    // ИТОГ ПО СЫРЬЮ: ТОЛЬКО ГОТОВЫЕ + БРАК (без партии!)
                     if (!materialTotals[d.mat]) {
                         materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
                     }
@@ -714,11 +836,11 @@ function calculateAll() {
             var summaryContainer = document.getElementById('summary-container');
             var shareBtn = document.getElementById('share-btn');
             
-            if (summaryContainer) {
-                if (hasData) {
+            if (summaryContainer) {                if (hasData) {
                     var matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью (только видимые ТПА):</div>';
                     for (var mat in materialTotals) {
-                        if (materialTotals.hasOwnProperty(mat)) {                            var stats = materialTotals[mat];
+                        if (materialTotals.hasOwnProperty(mat)) {
+                            var stats = materialTotals[mat];
                             matSummaryHtml += '<div class="summary-item material-item">' +
                                 '<div class="summary-tpa">' + mat + '</div>' +
                                 '<div class="summary-data">' +
@@ -736,7 +858,7 @@ function calculateAll() {
                         shareBtn.classList.add('visible');
                     }
                 } else {
-                    summaryContainer.innerHTML = '<div class="empty-hint" style="text-align:center; padding:20px; color:var(--text-secondary);">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
+                    summaryContainer.innerHTML = '<div class="empty-hint">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
                     
                     if (shareBtn) {
                         shareBtn.classList.remove('visible');
@@ -763,11 +885,11 @@ function calculateAll() {
 
             for (var j = 0; j < inputs.length; j++) {
                 var input = inputs[j];
-                var idx = input.getAttribute('data-idx');
-                var field = input.getAttribute('data-field');
+                var idx = input.getAttribute('data-idx');                var field = input.getAttribute('data-field');
                 if (field === 'mat') {
                     data[idx].mat = input.value;
-                } else {                    var val = parseFloat(input.value);
+                } else {
+                    var val = parseFloat(input.value);
                     if (!isNaN(val) && val >= 0) {
                         data[idx][field] = val;
                     }
@@ -778,7 +900,7 @@ function calculateAll() {
             var dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
             
             var reportLines = [];
-            reportLines.push('📊 ОТЧЁТ ТПА');
+            reportLines.push('📊 ПРЕМИУМ ОТЧЁТ ТПА');
             reportLines.push('📅 Дата: ' + dateStr);
             reportLines.push('━━━━━━━━━━━━━━━━━━━━');
 
@@ -812,11 +934,11 @@ function calculateAll() {
                         reportLines.push(`   📦 Партия (вкл. смену): ${batchPartsToday} шт (${batchWeightKg.toFixed(3)} кг)`);
                     }
                     reportLines.push('');
-
                     if (!materialTotals[d.mat]) {
                         materialTotals[d.mat] = { good: 0, defect: 0 };
                     }
-                    materialTotals[d.mat].good += goodWeightKg;                    materialTotals[d.mat].defect += defectWeightKg;
+                    materialTotals[d.mat].good += goodWeightKg;
+                    materialTotals[d.mat].defect += defectWeightKg;
                     totalAllGood += goodWeightKg;
                     totalAllDefect += defectWeightKg;
                 }
@@ -832,6 +954,7 @@ function calculateAll() {
 
             var report = reportLines.join('\n');
 
+            // Модальное окно
             var modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed;
@@ -845,31 +968,32 @@ function calculateAll() {
             modal.innerHTML = `
                 <div style="
                     background: var(--card);
-                    border-radius: 16px;
+                    border-radius: 20px;
                     padding: 20px;
                     max-width: 95%;
                     width: 400px;
-                    box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+                    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+                    backdrop-filter: blur(10px);
                     border: 1px solid var(--border);
                 ">
                 <h3 style="color: var(--primary); margin-top: 0;">📤 Поделиться отчётом</h3>
-                <textarea id="report-text" rows="5" style="
+                <textarea id="report-text" rows="6" style="
                     width: 100%;
                     padding: 12px;
                     border: 1px solid var(--border);
-                    border-radius: 10px;
+                    border-radius: 12px;
                     font-size: 14px;
-                    background: var(--card);
-                    color: var(--text);
+                    background: var(--bg);                    color: var(--text);
                     resize: none;
                 ">${report}</textarea>
                 <div style="display: flex; gap: 10px; margin-top: 16px;">
                     <button class="btn-copy" style="
-                        flex: 1;                        padding: 12px;
+                        flex: 1;
+                        padding: 12px;
                         background: var(--success);
                         color: white;
                         border: none;
-                        border-radius: 10px;
+                        border-radius: 12px;
                         font-weight: 600;
                     ">📋 Скопировать</button>
                     <button class="btn-whatsapp" style="
@@ -878,9 +1002,18 @@ function calculateAll() {
                         background: #25D366;
                         color: white;
                         border: none;
-                        border-radius: 10px;
+                        border-radius: 12px;
                         font-weight: 600;
                     ">💬 WhatsApp</button>
+                    <button class="btn-tg" style="
+                        flex: 1;
+                        padding: 12px;
+                        background: #0088cc;
+                        color: white;
+                        border: none;
+                        border-radius: 12px;
+                        font-weight: 600;
+                    ">✈️ Telegram</button>
                 </div>
                 </div>
             `;
@@ -889,6 +1022,7 @@ function calculateAll() {
             var textArea = modal.querySelector('#report-text');
             var btnCopy = modal.querySelector('.btn-copy');
             var btnWhatsApp = modal.querySelector('.btn-whatsapp');
+            var btnTg = modal.querySelector('.btn-tg');
 
             btnCopy.onclick = function() {
                 navigator.clipboard.writeText(report).then(() => {
@@ -898,8 +1032,12 @@ function calculateAll() {
             };
 
             btnWhatsApp.onclick = function() {
+                var encoded = encodeURIComponent(report);                window.open(`https://web.whatsapp.com/send?text=${encoded}`, '_blank');
+            };
+
+            btnTg.onclick = function() {
                 var encoded = encodeURIComponent(report);
-                window.open(`https://web.whatsapp.com/send?text=${encoded}`, '_blank');
+                window.open(`https://t.me/share/url?url=&text=${encoded}`, '_blank');
             };
 
             modal.addEventListener('click', function(e) {
@@ -928,7 +1066,7 @@ function switchTab(tabName) {
         }
 
         function resetAll() {
-            if(confirm('Очистить все введенные данные? Настройки темы и сворачивания ТПА останутся.')) {
+            if(confirm('Очистить все введенные данные? Настройки темы, фона и сворачивания ТПА останутся.')) {
                 var inputs = document.querySelectorAll('.calc-input');
                 for (var i = 0; i < inputs.length; i++) {
                     var input = inputs[i];
@@ -951,3 +1089,21 @@ function switchTab(tabName) {
     </script>
 </body>
 </html>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="tab-btn-calc"><i class="fas fa-calculator"></i> Калькулятор</button>
+        <button class="tab-btn" id="tab-btn-setup"><i class="fas fa-tools"></i> Для наладчика</button>
+    </div>
+
+    <div class="container">
+        <div id="tab-calc" class="tab-content active">
+            <div id="tpa-container"></div>
+            <button class="reset-btn" id="reset-btn"><i class="fas fa-trash-alt"></i> Очистить все данные</button>
+        </div>
+
+        <div id="tab-setup" class="tab-content">
+            <div class="summary-list" id="summary-container"></div>
+            <button class="share-btn" id="share-btn"><i class="fas fa-share-alt"></i> Поделиться отчётом</button>
+        </div>
+    </div>
