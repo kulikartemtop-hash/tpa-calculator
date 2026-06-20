@@ -6,35 +6,18 @@
     <title>TPA Premium Calculator</title>
     <style>
         :root {
-            --bg: #e6f7ff;
-            --card: rgba(255, 255, 255, 0.92);
-            --text: #0c4a6e;
-            --text-secondary: #1e7490;
-            --border: #bae6fd;
-            --primary: #0ea5e9;
-            --primary-dark: #0284c7;
-            --success: #059669;
-            --danger: #dc2626;
-            --warning: #d97706;
-            --shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.25);
-            --glass: rgba(255, 255, 255, 0.4);
-            --glass-border: rgba(14, 165, 233, 0.2);
-            --bg-image: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
-        }
-
-        [data-theme="dark"] {
             --bg: #0c1e3e;
-            --card: rgba(30, 64, 175, 0.25);
-            --text: #dbeafe;
-            --text-secondary: #93c5fd;
+            --card: rgba(15, 23, 42, 0.85);
+            --text: #ffffff;
+            --text-secondary: #cbd5e1;
             --border: #1e40af;
             --primary: #38bdf8;
             --primary-dark: #0ea5e9;
             --success: #22c55e;
             --danger: #f87171;
             --warning: #f97316;
-            --shadow: 0 12px 30px -10px rgba(30, 64, 175, 0.3);
-            --glass: rgba(30, 64, 175, 0.2);
+            --shadow: 0 12px 30px -10px rgba(56, 189, 248, 0.3);
+            --glass: rgba(15, 23, 42, 0.6);
             --glass-border: rgba(56, 189, 248, 0.3);
             --bg-image: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
         }
@@ -47,10 +30,12 @@
             padding: 0;
             font-size: 15px;
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.5s ease, color 0.3s ease;            min-height: 100vh;
+            transition: background 0.5s ease, color 0.3s ease;
+            min-height: 100vh;
             backdrop-filter: blur(10px);
             background: var(--bg-image);
             background-attachment: fixed;
+            color: var(--text);
         }
 
         .top-controls {
@@ -62,8 +47,7 @@
             border-radius: 20px;
             box-shadow: var(--shadow);
             margin: 12px;
-            position: sticky;
-            top: 8px;
+            position: sticky;            top: 8px;
             z-index: 101;
             backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
@@ -87,22 +71,24 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 18px;
+            color: var(--text);
         }
 
         .icon-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
             background: var(--card);
         }
 
         .compact-select {
-            padding: 12px 16px;            border-radius: 16px;
+            padding: 12px 16px;
+            border-radius: 16px;
             border: 1px solid var(--border);
             background: var(--card);
             color: var(--text);
             font-size: 0.95rem;
             min-width: 160px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .tabs {
@@ -110,8 +96,7 @@
             background: var(--card);
             border-radius: 20px;
             margin: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
+            overflow: hidden;            box-shadow: var(--shadow);
             border: 1px solid var(--glass-border);
         }
 
@@ -146,6 +131,7 @@
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
         .tpa-card {
             background: var(--card);
             border-radius: 24px;
@@ -159,19 +145,18 @@
             position: relative;
             overflow: hidden;
         }
-
         .tpa-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 16px 32px -12px rgba(14, 165, 233, 0.2);
+            box-shadow: 0 16px 32px -12px rgba(56, 189, 248, 0.25);
         }
 
         .tpa-header {
             font-weight: 800;
             font-size: 1.3rem;
-            color: var(--primary-dark);
+            color: var(--primary);
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 2px solid var(--primary);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -182,6 +167,7 @@
             font-weight: 600;
             text-align: right;
             line-height: 1.6;
+            color: var(--text-secondary);
         }
 
         .form-row {
@@ -194,9 +180,10 @@
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
         
-        label {            font-size: 0.9rem;
+        label {
+            font-size: 0.9rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--primary);
             margin-bottom: 6px;
             display: flex;
             align-items: center;
@@ -207,23 +194,22 @@
             padding: 16px;
             border: 1px solid var(--border);
             border-radius: 16px;
-            font-size: 16px;
-            background: var(--bg);
+            font-size: 16px;            background: rgba(30, 41, 59, 0.5);
             color: var(--text);
             width: 100%;
             transition: all 0.3s;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         select:focus, input:focus {
             outline: none;
             border-color: var(--primary);
             background: var(--card);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
         }
 
         .batch-section {
-            background: var(--glass);
+            background: rgba(30, 41, 59, 0.4);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 14px;
@@ -243,7 +229,8 @@
             border-radius: 24px;
             overflow: hidden;
             border: 1px solid var(--border);
-            margin-bottom: 24px;            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
             backdrop-filter: blur(10px);
         }
 
@@ -256,12 +243,11 @@
             transition: background 0.3s;
         }
 
-        .summary-item:hover { background: rgba(14, 165, 233, 0.08); }
-        .summary-item:last-child { border-bottom: none; }
+        .summary-item:hover { background: rgba(56, 189, 248, 0.08); }        .summary-item:last-child { border-bottom: none; }
         
         .summary-tpa {
             font-weight: 700;
-            color: var(--primary-dark);
+            color: var(--primary);
             min-width: 110px;
             font-size: 1.1rem;
         }
@@ -270,6 +256,7 @@
             text-align: right;
             font-size: 0.95rem;
             line-height: 1.6;
+            color: var(--text-secondary);
         }
 
         .reset-btn {
@@ -292,7 +279,8 @@
             gap: 12px;
         }
 
-        .share-btn {            width: 100%;
+        .share-btn {
+            width: 100%;
             padding: 18px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
@@ -304,8 +292,7 @@
             margin-bottom: 24px;
             box-shadow: 0 12px 24px -8px rgba(29, 78, 216, 0.3);
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
+            transition: all 0.3s;            display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
@@ -322,8 +309,20 @@
             margin-bottom: 12px;
             padding: 10px;
             border-radius: 14px;
-            background: rgba(14, 165, 233, 0.1);
+            background: rgba(56, 189, 248, 0.1);
             transition: all 0.3s;
+        }
+
+        .tpa-toggle-container::before {
+            content: "▾";
+            font-size: 18px;
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .tpa-collapsed .tpa-toggle-container::before {
+            content: "▴";
         }
 
         .tpa-collapsed {
@@ -331,7 +330,9 @@
             overflow: hidden;
             padding-bottom: 0 !important;
             border-radius: 16px;
+            border: 1px solid var(--warning);
             transition: all 0.3s ease;
+            opacity: 0.95;
         }
 
         .tpa-collapsed .tpa-header {
@@ -340,14 +341,24 @@
         }
 
         .tpa-collapsed .form-row,
-        .tpa-collapsed .batch-section {
-            display: none;        }
+        .tpa-collapsed .batch-section {            display: none;
+        }
 
         .tpa-collapsed .tpa-mini-result {
             display: block;
             text-align: left;
             font-size: 0.75rem;
             margin-top: 6px;
+            color: var(--text);
+        }
+
+        .tpa-collapsed .tpa-mini-result .good {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .tpa-collapsed .tpa-mini-result .defect {
+            color: var(--danger);
+            font-weight: 600;
         }
     </style>
 </head>
@@ -360,7 +371,7 @@
             </select>
         </div>
         <div class="control-group">
-            <button class="icon-btn" id="theme-btn">🌙</button>
+            <button class="icon-btn" id="theme-btn">☀️</button>
             <button class="icon-btn" id="toggle-all-btn">⏷</button>
         </div>
     </div>
@@ -379,8 +390,7 @@
         <div id="tab-setup" class="tab-content">
             <div class="summary-list" id="summary-container"></div>
             <button class="share-btn" id="share-btn">📤 Поделиться отчётом</button>
-        </div>
-    </div>
+        </div>    </div>
 <script>
         var TPA_LIST = [
             "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6",
@@ -395,7 +405,7 @@
             
             var wpSelect = document.getElementById('wallpaper-select');
             if (wpSelect) {
-                wpSelect.disabled = true; // фиксированный стиль
+                wpSelect.disabled = true;
             }
             
             updateThemeIcon(savedTheme);
@@ -568,7 +578,7 @@
         function updateThemeIcon(theme) {
             var btn = document.getElementById('theme-btn');
             if (btn) {
-                btn.textContent = theme === 'light' ? '🌙' : '☀️';
+                btn.textContent = theme === 'light' ? '☀️' : '🌙';
             }
         }
 
@@ -681,7 +691,6 @@ function calculateAll() {
                         '</div>' +
                     '</div>';
 
-                    // ИТОГ ПО СЫРЬЮ: только готовые + брак
                     if (!materialTotals[d.mat]) {
                         materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
                     }
@@ -696,15 +705,15 @@ function calculateAll() {
             
             if (summaryContainer) {
                 if (hasData) {
-                    var matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью (только видимые ТПА):</div>';
-                    for (var mat in materialTotals) {                        if (materialTotals.hasOwnProperty(mat)) {
-                            var stats = materialTotals[mat];
+                    var matSummaryHtml = '<div class="material-summary-header" style="color: var(--primary); font-weight: 700; padding: 12px 0;">📦 Итого по сырью (только видимые ТПА):</div>';
+                    for (var mat in materialTotals) {
+                        if (materialTotals.hasOwnProperty(mat)) {                            var stats = materialTotals[mat];
                             matSummaryHtml += '<div class="summary-item material-item">' +
-                                '<div class="summary-tpa">' + mat + '</div>' +
+                                '<div class="summary-tpa" style="color: var(--primary);">' + mat + '</div>' +
                                 '<div class="summary-data">' +
-                                    '<div class="parts">' + stats.totalWeight.toFixed(3) + ' кг всего</div>' +
-                                    '<div class="weight-good">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
-                                    '<div class="weight-defect">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
+                                    '<div class="parts" style="color: var(--text);">Всего: ' + stats.totalWeight.toFixed(3) + ' кг</div>' +
+                                    '<div class="weight-good" style="color: var(--success);">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
+                                    '<div class="weight-defect" style="color: var(--danger);">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
                                 '</div>' +
                             '</div>';
                         }
@@ -746,8 +755,8 @@ function calculateAll() {
                 var idx = input.getAttribute('data-idx');
                 var field = input.getAttribute('data-field');
                 if (field === 'mat') {
-                    data[idx].mat = input.value;                } else {
-                    var val = parseFloat(input.value);
+                    data[idx].mat = input.value;
+                } else {                    var val = parseFloat(input.value);
                     if (!isNaN(val) && val >= 0) {
                         data[idx][field] = val;
                     }
@@ -795,8 +804,8 @@ function calculateAll() {
 
                     if (!materialTotals[d.mat]) {
                         materialTotals[d.mat] = { good: 0, defect: 0 };
-                    }                    materialTotals[d.mat].good += goodWeightKg;
-                    materialTotals[d.mat].defect += defectWeightKg;
+                    }
+                    materialTotals[d.mat].good += goodWeightKg;                    materialTotals[d.mat].defect += defectWeightKg;
                     totalAllGood += goodWeightKg;
                     totalAllDefect += defectWeightKg;
                 }
@@ -812,12 +821,11 @@ function calculateAll() {
 
             var report = reportLines.join('\n');
 
-            // Модальное окно
             var modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed;
                 top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.6);
+                background: rgba(0,0,0,0.7);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -826,41 +834,41 @@ function calculateAll() {
             modal.innerHTML = `
                 <div style="
                     background: var(--card);
-                    border-radius: 16px;
-                    padding: 20px;
-                    max-width: 95%;
-                    width: 400px;
-                    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-                    border: 1px solid var(--border);
+                    border-radius:16px;
+                    padding:20px;
+                    max-width:95%;
+                    width:400px;
+                    box-shadow:0 12px 24px rgba(0,0,0,0.2);
+                    border:1px solid var(--border);
                 ">
-                <h3 style="color: var(--primary); margin-top: 0;">📤 Поделиться отчётом</h3>
+                <h3 style="color: var(--primary); margin-top:0;">📤 Поделиться отчётом</h3>
                 <textarea id="report-text" rows="5" style="
-                    width: 100%;
-                    padding: 12px;
-                    border: 1px solid var(--border);
-                    border-radius: 10px;
-                    font-size: 14px;
-                    background: var(--bg);
-                    color: var(--text);
-                    resize: none;
+                    width:100%;
+                    padding:12px;
+                    border:1px solid var(--border);
+                    border-radius:10px;
+                    font-size:14px;
+                    background:var(--card);
+                    color:var(--text);
+                    resize:none;
                 ">${report}</textarea>
-                <div style="display: flex; gap: 10px; margin-top: 16px;">                    <button class="btn-copy" style="
-                        flex: 1;
-                        padding: 12px;
-                        background: var(--success);
-                        color: white;
-                        border: none;
-                        border-radius: 10px;
-                        font-weight: 600;
+                <div style="display:flex; gap:10px; margin-top:16px;">
+                    <button class="btn-copy" style="
+                        flex:1;                        padding:12px;
+                        background:var(--success);
+                        color:white;
+                        border:none;
+                        border-radius:10px;
+                        font-weight:600;
                     ">📋 Скопировать</button>
                     <button class="btn-whatsapp" style="
-                        flex: 1;
-                        padding: 12px;
-                        background: #25D366;
-                        color: white;
-                        border: none;
-                        border-radius: 10px;
-                        font-weight: 600;
+                        flex:1;
+                        padding:12px;
+                        background:#25D366;
+                        color:white;
+                        border:none;
+                        border-radius:10px;
+                        font-weight:600;
                     ">💬 WhatsApp</button>
                 </div>
                 </div>
