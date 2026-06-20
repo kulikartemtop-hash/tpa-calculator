@@ -1,71 +1,16 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light" data-wallpaper="1">
+<html lang="ru" data-theme="light" data-style="ocean">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TPA Premium Calculator</title>
+    <title>TPA Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #f0f9ff;
-            --card: rgba(255, 255, 255, 0.9);
-            --text: #1e3a8a;
-            --text-secondary: #4b5563;
-            --border: #bae6fd;
-            --primary: #0ea5e9;
-            --primary-dark: #0284c7;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            --glass-bg: rgba(255, 255, 255, 0.35);
-            --glass-border: rgba(255, 255, 255, 0.18);
-        }
-
-        [data-theme="dark"] {
-            --bg: #0c1e3e;
-            --card: rgba(30, 64, 175, 0.2);
-            --text: #dbeafe;
-            --text-secondary: #cbd5e1;
-            --border: #1e40af;
-            --primary: #38bdf8;
-            --primary-dark: #0ea5e9;
-            --success: #34d399;
-            --danger: #f87171;
-            --warning: #fbbf24;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
-            --glass-bg: rgba(15, 23, 42, 0.35);
-            --glass-border: rgba(30, 64, 175, 0.3);
-        }
-
-        [data-wallpaper="1"] body { 
-            background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
-            background-attachment: fixed;
-        }
-        [data-theme="dark"][data-wallpaper="1"] body { 
-            background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
-        }
-        
-        [data-wallpaper="2"] body { 
-            background: radial-gradient(circle at 10% 20%, #e0f2fe 0%, #bae6fd 90%);            background-attachment: fixed;
-        }
-        [data-theme="dark"][data-wallpaper="2"] body { 
-            background: radial-gradient(circle at 10% 20%, #1e3a8a 0%, #0c1e3e 90%);
-        }
-        
-        [data-wallpaper="3"] body { 
-            background: linear-gradient(45deg, #dbeafe 30%, #bae6fd 100%);
-            background-attachment: fixed;
-        }
-        [data-theme="dark"][data-wallpaper="3"] body { 
-            background: linear-gradient(45deg, #1e3a8a 30%, #0c4a6e 100%);
-        }
-
+        /* === ОБЩИЕ СТИЛИ === */
         * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: var(--text);
             margin: 0;
             padding: 0;
             font-size: 15px;
@@ -80,9 +25,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px 16px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            background: var(--bg);
             border-radius: 16px;
             box-shadow: var(--shadow);
             margin: 10px;
@@ -96,6 +39,7 @@
             gap: 12px;
             align-items: center;
         }
+
         .icon-btn {
             background: var(--card);
             border: 1px solid var(--border);
@@ -103,8 +47,7 @@
             padding: 10px 14px;
             font-size: 1.3rem;
             cursor: pointer;
-            color: var(--text);
-            transition: all 0.2s;
+            color: var(--text);            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -126,9 +69,7 @@
 
         .tabs {
             display: flex;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            background: var(--card);
             border-radius: 16px;
             margin: 10px;
             overflow: hidden;
@@ -145,7 +86,8 @@
             color: var(--text-secondary);
             cursor: pointer;
             border-bottom: 3px solid transparent;
-            display: flex;            align-items: center;
+            display: flex;
+            align-items: center;
             justify-content: center;
             gap: 8px;
             transition: all 0.3s;
@@ -154,8 +96,7 @@
         .tab-btn.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
-            background: rgba(14, 165, 233, 0.1);
-        }
+            background: var(--glass-bg);        }
 
         .container {
             padding: 12px;
@@ -180,21 +121,6 @@
             overflow: hidden;
         }
 
-        .tpa-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: -1;
-        }
-
-        .tpa-card:hover::before { opacity: 1; }
-        .tpa-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -6px rgba(0, 0, 0, 0.1); }
         .tpa-header {
             font-weight: 800;
             font-size: 1.25rem;
@@ -214,17 +140,12 @@
             line-height: 1.5;
         }
 
-        .tpa-mini-result .good { color: var(--success); }
-        .tpa-mini-result .defect { color: var(--danger); }
-        .tpa-mini-result .batch { color: var(--warning); }
-
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-bottom: 12px;
         }
-
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
         
@@ -243,7 +164,8 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             font-size: 16px;
-            background: var(--bg);            color: var(--text);
+            background: var(--bg);
+            color: var(--text);
             width: 100%;
             transition: all 0.2s;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -256,23 +178,8 @@
             box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
         }
 
-        .input-defect {
-            border-color: #fecaca !important;
-            background-color: rgba(239, 68, 68, 0.08) !important;
-        }
-
-        .input-defect:focus { border-color: var(--danger) !important; }
-
-        .input-batch {
-            border-color: #fde68a !important;
-            background-color: rgba(245, 158, 11, 0.08) !important;
-        }
-
-        .input-batch:focus { border-color: var(--warning) !important; }
-
         .batch-section {
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 14px;
             padding: 12px;
@@ -287,12 +194,12 @@
             text-align: center;
         }
 
-        .summary-list {
-            background: var(--card);
+        .summary-list {            background: var(--card);
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid var(--border);
-            margin-bottom: 20px;            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
             backdrop-filter: blur(10px);
         }
 
@@ -321,35 +228,6 @@
             line-height: 1.6;
         }
 
-        .summary-data .parts { font-weight: 600; color: var(--text); }
-        .summary-data .weight-good { color: var(--success); font-weight: 600; }
-        .summary-data .weight-defect { color: var(--danger); font-weight: 600; }
-        .summary-data .weight-total { color: var(--text-secondary); font-size: 0.85rem; }
-        .summary-data .batch-info { color: var(--warning); font-weight: 600; }
-        
-        .material-summary-header {
-            padding: 16px 18px;
-            font-weight: 700;
-            background: rgba(16, 185, 129, 0.15);
-            border-bottom: 1px solid var(--border);
-            color: var(--success);
-            font-size: 1.1rem;
-        }
-
-        .material-item { background: rgba(16, 185, 129, 0.08); }
-        .material-item .summary-tpa { color: var(--success); }
-        .material-item .parts { color: var(--success); font-size: 1rem; }
-
-        .empty-hint {
-            text-align: center;            color: var(--text-secondary);
-            padding: 40px 20px;
-            font-style: italic;
-            background: var(--card);
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
-
         .reset-btn {
             width: 100%;
             padding: 16px;
@@ -365,13 +243,9 @@
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: center;            justify-content: center;
             gap: 10px;
         }
-
-        .reset-btn:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.4), 0 10px 10px -6px rgba(239, 68, 68, 0.2); }
-        .reset-btn:active { transform: translateY(0); }
 
         .share-btn {
             width: 100%;
@@ -390,14 +264,89 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;            display: none;
+            gap: 10px;
+            display: none;
         }
 
         .share-btn.visible { display: flex; }
-        .share-btn:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(14, 165, 233, 0.4), 0 10px 10px -6px rgba(14, 165, 233, 0.2); }
-        .share-btn:active { transform: translateY(0); }
 
-        /* Сворачивание ТПА */
+        /* === СТИЛИ ПО ТИПАМ === */
+
+        /* 🌊 Ocean (Premium) */
+        [data-style="ocean"] {
+            --bg: #f0f9ff;
+            --card: rgba(255, 255, 255, 0.9);
+            --text: #1e3a8a;
+            --text-secondary: #4b5563;
+            --border: #bae6fd;
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --bg-image: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+        }
+
+        /* 🌲 Forest (Wood) */
+        [data-style="forest"] {
+            --bg: #f8f5f0;            --card: rgba(255, 255, 255, 0.95);
+            --text: #2d3748;
+            --text-secondary: #4a5568;
+            --border: #c5d6cb;
+            --primary: #2b6555;
+            --primary-dark: #1a4030;
+            --success: #4caf50;
+            --danger: #d32f2f;
+            --warning: #ed6c02;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --glass-bg: rgba(248, 245, 240, 0.4);
+            --glass-border: rgba(197, 214, 203, 0.3);
+            --bg-image: linear-gradient(135deg, #e6d3b7 0%, #c5d6cb 100%);
+        }
+
+        /* 📋 Standard (Classic) */
+        [data-style="standard"] {
+            --bg: #f5f7fa;
+            --card: rgba(255, 255, 255, 0.98);
+            --text: #2d3748;
+            --text-secondary: #718096;
+            --border: #cbd5e1;
+            --primary: #3182ce;
+            --primary-dark: #2c5282;
+            --success: #38a169;
+            --danger: #e53e3e;
+            --warning: #dd6b20;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --glass-bg: rgba(245, 247, 250, 0.5);
+            --glass-border: rgba(203, 213, 224, 0.4);
+            --bg-image: #f5f7fa;
+        }
+
+        /* Фон */
+        body {
+            background: var(--bg-image);
+            background-attachment: fixed;
+        }
+
+        /* Иконки по стилю */
+        [data-style="ocean"] .icon-btn i,
+        [data-style="ocean"] .tab-btn i {
+            color: var(--text);
+        }
+
+        [data-style="forest"] .icon-btn i,
+        [data-style="forest"] .tab-btn i {
+            color: var(--primary);
+        }
+        [data-style="standard"] .icon-btn i,
+        [data-style="standard"] .tab-btn i {
+            color: var(--text);
+        }
+
+        /* Сворачивание */
         .tpa-toggle-container {
             display: flex;
             align-items: center;
@@ -408,50 +357,13 @@
             background: rgba(14, 165, 233, 0.1);
         }
 
-        .tpa-toggle-label {
-            font-size: 0.9rem;
-            color: var(--text);
-            font-weight: 500;
+        [data-style="forest"] .tpa-toggle-container {
+            background: rgba(43, 101, 85, 0.1);
         }
 
-        .tpa-toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
+        [data-style="standard"] .tpa-toggle-container {
+            background: rgba(49, 130, 206, 0.1);
         }
-
-        .tpa-toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .slider:before {            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider { background-color: var(--success); }
-        input:checked + .slider:before { transform: translateX(26px); }
 
         .tpa-collapsed {
             height: 52px !important;
@@ -476,28 +388,15 @@
             font-size: 0.7rem;
             margin-top: 4px;
         }
-
-        .tpa-collapsed .tpa-mini-result .good {
-            color: var(--success);
-            font-weight: 600;
-        }
-        .tpa-collapsed .tpa-mini-result .defect {
-            color: var(--danger);
-            font-weight: 600;
-        }
-        .tpa-collapsed .tpa-mini-result .batch {
-            color: var(--warning);
-            font-weight: 600;
-        }    </style>
+    </style>
 </head>
 <body>
-
     <div class="top-controls">
         <div class="control-group">
-            <select id="wallpaper-select" class="compact-select">
-                <option value="1">🎨 Фон: Ocean</option>
-                <option value="2">🌅 Фон: Sunrise</option>
-                <option value="3">🌌 Фон: Galaxy</option>
+            <select id="theme-style" class="compact-select">
+                <option value="ocean">🌊 Ocean (Premium)</option>
+                <option value="forest">🌲 Forest (Дерево)</option>
+                <option value="standard">📋 Standard (Классика)</option>
             </select>
         </div>
         <div class="control-group">
@@ -531,18 +430,25 @@
         var MATERIALS = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
         function init() {
+            // Загрузка стиля
+            var savedStyle = localStorage.getItem('tpa_style') || 'ocean';
             var savedTheme = localStorage.getItem('tpa_theme') || 'light';
-            var savedWallpaper = localStorage.getItem('tpa_wallpaper') || '1';
             var savedCollapsed = JSON.parse(localStorage.getItem('tpa_collapsed')) || {};
+            document.documentElement.setAttribute('data-style', savedStyle);
             document.documentElement.setAttribute('data-theme', savedTheme);
-            document.documentElement.setAttribute('data-wallpaper', savedWallpaper);
             
-            var wpSelect = document.getElementById('wallpaper-select');
-            if (wpSelect) {
-                wpSelect.value = savedWallpaper;
-                wpSelect.addEventListener('change', function() {
-                    changeWallpaper(this.value);
+            var styleSelect = document.getElementById('theme-style');
+            if (styleSelect) {
+                styleSelect.value = savedStyle;
+                styleSelect.addEventListener('change', function() {
+                    document.documentElement.setAttribute('data-style', this.value);
+                    localStorage.setItem('tpa_style', this.value);
                 });
+            }
+            
+            var themeBtn = document.getElementById('theme-btn');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', toggleTheme);
             }
             
             updateThemeIcon(savedTheme);
@@ -564,14 +470,14 @@
                 }
                 
                 html += '<div class="tpa-card' + (isCollapsed ? ' tpa-collapsed' : '') + '" data-tpa="' + tpa + '">' +
-                    '<div class="tpa-toggle-container">' +
-                        '<label class="tpa-toggle-label">' + tpa + '</label>' +
+                    '<div class="tpa-toggle-container">' +                        '<label class="tpa-toggle-label">' + tpa + '</label>' +
                         '<label class="tpa-toggle-switch">' +
                             '<input type="checkbox" class="tpa-collapse-checkbox" data-tpa="' + tpa + '" ' + (isCollapsed ? 'checked' : '') + '>' +
                             '<span class="slider"></span>' +
                         '</label>' +
                     '</div>' +
-                    '<div class="tpa-header">' +                        '<span>Данные</span>' +
+                    '<div class="tpa-header">' +
+                        '<span>Данные</span>' +
                         '<div class="tpa-mini-result" id="res-' + i + '">' +
                             '<div class="good">0 шт</div>' +
                         '</div>' +
@@ -613,14 +519,14 @@
                     '</div>' +
                 '</div>';
             }
-            container.innerHTML = html;
-            
+            container.innerHTML = html;            
             loadData();
             
             var inputs = document.querySelectorAll('.calc-input');
             for (var k = 0; k < inputs.length; k++) {
                 inputs[k].addEventListener('input', function() {
-                    calculateAll();                    saveData();
+                    calculateAll();
+                    saveData();
                 });
             }
             
@@ -638,11 +544,6 @@
                     saveCollapsed();
                     calculateAll();
                 });
-            }
-            
-            var themeBtn = document.getElementById('theme-btn');
-            if (themeBtn) {
-                themeBtn.addEventListener('click', toggleTheme);
             }
             
             var toggleAllBtn = document.getElementById('toggle-all-btn');
@@ -667,9 +568,9 @@
                     switchTab('calc');
                 });
             }
-            if (tabBtnSetup) {
-                tabBtnSetup.addEventListener('click', function() {
-                    switchTab('setup');                });
+            if (tabBtnSetup) {                tabBtnSetup.addEventListener('click', function() {
+                    switchTab('setup');
+                });
             }
             
             calculateAll();
@@ -716,16 +617,11 @@
             localStorage.setItem('tpa_theme', next);
             updateThemeIcon(next);
         }
-
         function updateThemeIcon(theme) {
-            var btn = document.getElementById('theme-btn');            if (btn) {
+            var btn = document.getElementById('theme-btn');
+            if (btn) {
                 btn.innerHTML = theme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
             }
-        }
-
-        function changeWallpaper(val) {
-            document.documentElement.setAttribute('data-wallpaper', val);
-            localStorage.setItem('tpa_wallpaper', val);
         }
 
         function saveData() {
@@ -797,17 +693,15 @@ function calculateAll() {
                 var goodParts = d.perBox * d.boxes;
                 var defectParts = d.defect;
                 var batchParts = d.batchTotal;
-                
-                // Партия (вкл. смену) — только для отображения в карточке
                 var batchPartsToday = batchParts + goodParts;
                 
                 var goodWeightKg = (goodParts * d.weight) / 1000;
                 var defectWeightKg = (defectParts * d.weight) / 1000;
                 var totalWeightKg = goodWeightKg + defectWeightKg;
                 var batchWeightKg = (batchPartsToday * d.weight) / 1000;
+
                 var resEl = document.getElementById('res-' + k);
-                var batchInfoEl = document.getElementById('batch-info-' + k);
-                
+                var batchInfoEl = document.getElementById('batch-info-' + k);                
                 if (resEl) {
                     if (goodParts > 0 || defectParts > 0) {
                         var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
@@ -825,7 +719,6 @@ function calculateAll() {
                     batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + ((batchParts * d.weight) / 1000).toFixed(3) + ' кг';
                 }
 
-                // Проверяем, видима ли карточка (не свёрнута)
                 var card = document.querySelector('[data-tpa="' + tpa + '"]');
                 var isCardVisible = !card.classList.contains('tpa-collapsed');
 
@@ -841,7 +734,7 @@ function calculateAll() {
                         '</div>' +
                     '</div>';
 
-                    // ИТОГ ПО СЫРЬЮ: ТОЛЬКО ГОТОВЫЕ + БРАК (без партии!)
+                    // ИТОГ ПО СЫРЬЮ: только готовые + брак
                     if (!materialTotals[d.mat]) {
                         materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
                     }
@@ -854,10 +747,10 @@ function calculateAll() {
             var summaryContainer = document.getElementById('summary-container');
             var shareBtn = document.getElementById('share-btn');
             
-            if (summaryContainer) {                if (hasData) {
+            if (summaryContainer) {
+                if (hasData) {
                     var matSummaryHtml = '<div class="material-summary-header">📦 Итого по сырью (только видимые ТПА):</div>';
-                    for (var mat in materialTotals) {
-                        if (materialTotals.hasOwnProperty(mat)) {
+                    for (var mat in materialTotals) {                        if (materialTotals.hasOwnProperty(mat)) {
                             var stats = materialTotals[mat];
                             matSummaryHtml += '<div class="summary-item material-item">' +
                                 '<div class="summary-tpa">' + mat + '</div>' +
@@ -903,10 +796,10 @@ function calculateAll() {
 
             for (var j = 0; j < inputs.length; j++) {
                 var input = inputs[j];
-                var idx = input.getAttribute('data-idx');                var field = input.getAttribute('data-field');
+                var idx = input.getAttribute('data-idx');
+                var field = input.getAttribute('data-field');
                 if (field === 'mat') {
-                    data[idx].mat = input.value;
-                } else {
+                    data[idx].mat = input.value;                } else {
                     var val = parseFloat(input.value);
                     if (!isNaN(val) && val >= 0) {
                         data[idx][field] = val;
@@ -918,7 +811,7 @@ function calculateAll() {
             var dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
             
             var reportLines = [];
-            reportLines.push('📊 ПРЕМИУМ ОТЧЁТ ТПА');
+            reportLines.push('📊 ОТЧЁТ ТПА');
             reportLines.push('📅 Дата: ' + dateStr);
             reportLines.push('━━━━━━━━━━━━━━━━━━━━');
 
@@ -952,10 +845,10 @@ function calculateAll() {
                         reportLines.push(`   📦 Партия (вкл. смену): ${batchPartsToday} шт (${batchWeightKg.toFixed(3)} кг)`);
                     }
                     reportLines.push('');
+
                     if (!materialTotals[d.mat]) {
                         materialTotals[d.mat] = { good: 0, defect: 0 };
-                    }
-                    materialTotals[d.mat].good += goodWeightKg;
+                    }                    materialTotals[d.mat].good += goodWeightKg;
                     materialTotals[d.mat].defect += defectWeightKg;
                     totalAllGood += goodWeightKg;
                     totalAllDefect += defectWeightKg;
@@ -1001,10 +894,10 @@ function calculateAll() {
                     border: 1px solid var(--border);
                     border-radius: 12px;
                     font-size: 14px;
-                    background: var(--bg);                    color: var(--text);
+                    background: var(--bg);
+                    color: var(--text);
                     resize: none;
-                ">${report}</textarea>
-                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                ">${report}</textarea>                <div style="display: flex; gap: 10px; margin-top: 16px;">
                     <button class="btn-copy" style="
                         flex: 1;
                         padding: 12px;
@@ -1050,9 +943,9 @@ function calculateAll() {
             };
 
             btnWhatsApp.onclick = function() {
-                var encoded = encodeURIComponent(report);                window.open(`https://web.whatsapp.com/send?text=${encoded}`, '_blank');
+                var encoded = encodeURIComponent(report);
+                window.open(`https://web.whatsapp.com/send?text=${encoded}`, '_blank');
             };
-
             btnTg.onclick = function() {
                 var encoded = encodeURIComponent(report);
                 window.open(`https://t.me/share/url?url=&text=${encoded}`, '_blank');
@@ -1084,7 +977,7 @@ function switchTab(tabName) {
         }
 
         function resetAll() {
-            if(confirm('Очистить все введенные данные? Настройки темы, фона и сворачивания ТПА останутся.')) {
+            if(confirm('Очистить все введенные данные? Настройки стиля, темы и сворачивания ТПА останутся.')) {
                 var inputs = document.querySelectorAll('.calc-input');
                 for (var i = 0; i < inputs.length; i++) {
                     var input = inputs[i];
