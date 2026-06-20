@@ -411,7 +411,9 @@
             <button class="share-btn" id="share-btn">📤 Поделиться отчётом</button>
         </div>
     </div>
-<script>
+
+    <script>
+        // === ДАННЫЕ ===
         var TPA_LIST = [
             "ТПА 1", "ТПА 2", "ТПА 3", "ТПА 4", "ТПА 5", "ТПА 6",
             "ТПА 7", "ТПА 8", "ТПА 9", "ТПА 10", "ТПА 11", "ТПА 12",
@@ -419,24 +421,25 @@
         ];
         var MATERIALS = ["ПВХ серый", "ПВХ коричневый", "АБС", "PP"];
 
+        // === ИНИЦИАЛИЗАЦИЯ ===
         function init() {
             var savedTheme = localStorage.getItem('tpa_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             
             var wpSelect = document.getElementById('wallpaper-select');
             if (wpSelect) wpSelect.disabled = true;
-            
+
             updateThemeIcon(savedTheme);
 
             var container = document.getElementById('tpa-container');
             if (!container) {
-                console.error('Контейнер tpa-container не найден!');
+                console.error('❌ Контейнер tpa-container не найден!');
                 return;
             }
 
+            // Генерируем карточки
             var html = '';
-            for (var i = 0; i < TPA_LIST.length; i++) {
-                var tpa = TPA_LIST[i];
+            for (var i = 0; i < TPA_LIST.length; i++) {                var tpa = TPA_LIST[i];
                 var matOptions = '';
                 for (var j = 0; j < MATERIALS.length; j++) {
                     matOptions += '<option value="' + MATERIALS[j] + '">' + MATERIALS[j] + '</option>';
@@ -460,7 +463,8 @@
                                 matOptions +
                             '</select>' +
                         '</div>' +
-                    '</div>' +                    '<div class="form-row">' +
+                    '</div>' +
+                    '<div class="form-row">' +
                         '<div class="form-group">' +
                             '<label>Готовые: шт. в кор.</label>' +
                             '<input type="number" class="calc-input" data-idx="' + i + '" data-field="perBox" inputmode="numeric" placeholder="0">' +
@@ -484,15 +488,15 @@
                         '<div class="batch-info" id="batch-info-' + i + '">Партия: 0 шт / 0.000 кг</div>' +
                         '<div class="form-group full-width">' +
                             '<label>Всего за партию (шт)</label>' +
-                            '<input type="number" class="calc-input input-batch" data-idx="' + i + '" data-field="batchTotal" inputmode="numeric" placeholder="0">' +
-                        '</div>' +
+                            '<input type="number" class="calc-input input-batch" data-idx="' + i + '" data-field="batchTotal" inputmode="numeric" placeholder="0">' +                        '</div>' +
                     '</div>' +
                 '</div>';
             }
             container.innerHTML = html;
-            
+
             loadData();
-            
+
+            // Обработчики
             var inputs = document.querySelectorAll('.calc-input');
             for (var k = 0; k < inputs.length; k++) {
                 inputs[k].addEventListener('input', function() {
@@ -500,8 +504,7 @@
                     saveData();
                 });
             }
-            
-            // Сворачивание
+
             var collapseCheckboxes = document.querySelectorAll('.tpa-collapse-checkbox');
             for (var l = 0; l < collapseCheckboxes.length; l++) {
                 collapseCheckboxes[l].addEventListener('change', function() {
@@ -509,452 +512,25 @@
                     var card = document.querySelector('[data-tpa="' + tpa + '"]');
                     if (this.checked) {
                         card.classList.add('tpa-collapsed');
-                    } else {                        card.classList.remove('tpa-collapsed');
+                    } else {
+                        card.classList.remove('tpa-collapsed');
                     }
                     saveCollapsed();
                     calculateAll();
                 });
             }
-            
-            var themeBtn = document.getElementById('theme-btn');
-            if (themeBtn) {
-                themeBtn.addEventListener('click', toggleTheme);
-            }
-            
-            var toggleAllBtn = document.getElementById('toggle-all-btn');
-            if (toggleAllBtn) {
-                toggleAllBtn.addEventListener('click', toggleAllCollapse);
-            }
-            
-            var resetBtn = document.getElementById('reset-btn');
-            if (resetBtn) {
-                resetBtn.addEventListener('click', resetAll);
-            }
-            
-            var shareBtn = document.getElementById('share-btn');
-            if (shareBtn) {
-                shareBtn.addEventListener('click', shareReport);
-            }
-            
-            var tabBtnCalc = document.getElementById('tab-btn-calc');
-            var tabBtnSetup = document.getElementById('tab-btn-setup');
-            if (tabBtnCalc) {
-                tabBtnCalc.addEventListener('click', function() {
-                    switchTab('calc');
-                });
-            }
-            if (tabBtnSetup) {
-                tabBtnSetup.addEventListener('click', function() {
-                    switchTab('setup');
-                });
-            }
-            
-            calculateAll();
-        }
 
-        function toggleAllCollapse() {
-            var checkboxes = document.querySelectorAll('.tpa-collapse-checkbox');
-            var allCollapsed = true;
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (!checkboxes[i].checked) {
-                    allCollapsed = false;
-                    break;                }
-            }
-            
-            for (var j = 0; j < checkboxes.length; j++) {
-                checkboxes[j].checked = !allCollapsed;
-                var tpa = checkboxes[j].getAttribute('data-tpa');
-                var card = document.querySelector('[data-tpa="' + tpa + '"]');
-                if (!allCollapsed) {
-                    card.classList.add('tpa-collapsed');
-                } else {
-                    card.classList.remove('tpa-collapsed');
-                }
-            }
-            saveCollapsed();
-            calculateAll();
-        }
+            document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+            document.getElementById('toggle-all-btn').addEventListener('click', toggleAllCollapse);
+            document.getElementById('reset-btn').addEventListener('click', resetAll);
+            document.getElementById('share-btn').addEventListener('click', shareReport);
 
-        function saveCollapsed() {
-            var checkboxes = document.querySelectorAll('.tpa-collapse-checkbox');
-            var collapsed = {};
-            for (var i = 0; i < checkboxes.length; i++) {
-                var tpa = checkboxes[i].getAttribute('data-tpa');
-                collapsed[tpa] = checkboxes[i].checked;
-            }
-            localStorage.setItem('tpa_collapsed', JSON.stringify(collapsed));
-        }
-
-        function toggleTheme() {
-            var current = document.documentElement.getAttribute('data-theme');
-            var next = current === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('tpa_theme', next);
-            updateThemeIcon(next);
-        }
-
-        function updateThemeIcon(theme) {
-            var btn = document.getElementById('theme-btn');
-            if (btn) {
-                btn.textContent = theme === 'light' ? '☀️' : '🌙';
-            }
-        }
-
-        function saveData() {
-            var inputs = document.querySelectorAll('.calc-input');
-            var dataToSave = {};
-            for (var i = 0; i < inputs.length; i++) {
-                var input = inputs[i];
-                var idx = input.getAttribute('data-idx');
-                var field = input.getAttribute('data-field');
-                if (!dataToSave[idx]) dataToSave[idx] = {};                dataToSave[idx][field] = input.value;
-            }
-            localStorage.setItem('tpa_calc_data', JSON.stringify(dataToSave));
-        }
-
-        function loadData() {
-            var saved = localStorage.getItem('tpa_calc_data');
-            if (saved) {
-                var dataToSave = JSON.parse(saved);
-                var inputs = document.querySelectorAll('.calc-input');
-                for (var i = 0; i < inputs.length; i++) {
-                    var input = inputs[i];
-                    var idx = input.getAttribute('data-idx');
-                    var field = input.getAttribute('data-field');
-                    if (dataToSave[idx] && dataToSave[idx][field] !== undefined) {
-                        input.value = dataToSave[idx][field];
-                    }
-                }
-            }
-        }
-function calculateAll() {
-            var inputs = document.querySelectorAll('.calc-input');
-            var data = {};
-            
-            for (var i = 0; i < TPA_LIST.length; i++) {
-                data[i] = { 
-                    name: TPA_LIST[i], 
-                    mat: 'Не выбрано', 
-                    perBox: 0, 
-                    boxes: 0, 
-                    weight: 0, 
-                    defect: 0,
-                    batchTotal: 0
-                };
-            }
-
-            for (var j = 0; j < inputs.length; j++) {
-                var input = inputs[j];
-                var idx = input.getAttribute('data-idx');
-                var field = input.getAttribute('data-field');
-                if (field === 'mat') {
-                    data[idx].mat = input.value;
-                } else {
-                    var val = parseFloat(input.value);
-                    if (!isNaN(val) && val >= 0) {
-                        data[idx][field] = val;
-                    }
-                }
-            }
-
-            var summaryHtml = '';
-            var hasData = false;
-            var materialTotals = {};
-
-            for (var k = 0; k < TPA_LIST.length; k++) {
-                var tpa = TPA_LIST[k];
-                var d = data[k];
-                
-                var goodParts = d.perBox * d.boxes;
-                var defectParts = d.defect;
-                var batchParts = d.batchTotal;
-                var batchPartsToday = batchParts + goodParts;
-                
-                var goodWeightKg = (goodParts * d.weight) / 1000;
-                var defectWeightKg = (defectParts * d.weight) / 1000;
-                var totalWeightKg = goodWeightKg + defectWeightKg;
-                var batchWeightKg = (batchPartsToday * d.weight) / 1000;
-
-                var resEl = document.getElementById('res-' + k);
-                var batchInfoEl = document.getElementById('batch-info-' + k);                
-                if (resEl) {
-                    if (goodParts > 0 || defectParts > 0) {
-                        var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
-                        if (defectParts > 0) {
-                            miniHtml += '<div class="defect">Брак: ' + defectParts + ' шт</div>';
-                        }
-                        resEl.innerHTML = miniHtml;
-                        hasData = true;
-                    } else {
-                        resEl.innerHTML = '<div class="good">0 шт</div>';
-                    }
-                }
-                
-                if (batchInfoEl) {
-                    batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + ((batchParts * d.weight) / 1000).toFixed(3) + ' кг';
-                }
-
-                var card = document.querySelector('[data-tpa="' + tpa + '"]');
-                var isCardVisible = !card.classList.contains('tpa-collapsed');
-
-                if (isCardVisible && (goodParts > 0 || defectParts > 0 || batchPartsToday > 0)) {
-                    summaryHtml += '<div class="summary-item">' +
-                        '<div class="summary-tpa">' + tpa + '</div>' +
-                        '<div class="summary-data">' +
-                            '<div class="parts">Гот: ' + goodParts + ' шт | Брак: ' + defectParts + ' шт</div>' +
-                            '<div class="weight-good">Вес готовых: ' + goodWeightKg.toFixed(3) + ' кг</div>' +
-                            '<div class="weight-defect">Вес брака: ' + defectWeightKg.toFixed(3) + ' кг</div>' +
-                            '<div class="weight-total">Общий вес: ' + totalWeightKg.toFixed(3) + ' кг</div>' +
-                            '<div class="batch-info">📦 Партия (вкл. смену): ' + batchPartsToday + ' шт / ' + batchWeightKg.toFixed(3) + ' кг</div>' +
-                        '</div>' +
-                    '</div>';
-
-                    if (!materialTotals[d.mat]) {
-                        materialTotals[d.mat] = { totalWeight: 0, goodWeight: 0, defectWeight: 0 };
-                    }
-                    materialTotals[d.mat].totalWeight += totalWeightKg;
-                    materialTotals[d.mat].goodWeight += goodWeightKg;
-                    materialTotals[d.mat].defectWeight += defectWeightKg;
-                }
-            }
-
-            var summaryContainer = document.getElementById('summary-container');
-            var shareBtn = document.getElementById('share-btn');
-            
-            if (summaryContainer) {
-                if (hasData) {
-                    var matSummaryHtml = '<div class="material-summary-header" style="color: var(--primary); font-weight: 700; padding: 12px 0;">📦 Итого по сырью (только видимые ТПА):</div>';
-                    for (var mat in materialTotals) {
-                        if (materialTotals.hasOwnProperty(mat)) {                            var stats = materialTotals[mat];
-                            matSummaryHtml += '<div class="summary-item material-item">' +
-                                '<div class="summary-tpa" style="color: var(--primary);">' + mat + '</div>' +
-                                '<div class="summary-data">' +
-                                    '<div class="parts" style="color: var(--text);">Всего: ' + stats.totalWeight.toFixed(3) + ' кг</div>' +
-                                    '<div class="weight-good" style="color: var(--success);">Готовые: ' + stats.goodWeight.toFixed(3) + ' кг</div>' +
-                                    '<div class="weight-defect" style="color: var(--danger);">Брак: ' + stats.defectWeight.toFixed(3) + ' кг</div>' +
-                                '</div>' +
-                            '</div>';
-                        }
-                    }
-                    summaryHtml += matSummaryHtml;
-                    summaryContainer.innerHTML = summaryHtml;
-                    
-                    if (shareBtn) {
-                        shareBtn.classList.add('visible');
-                    }
-                } else {
-                    summaryContainer.innerHTML = '<div class="empty-hint" style="text-align:center; padding:20px; color:var(--text-secondary);">Заполните данные во вкладке "Калькулятор", чтобы увидеть сводку</div>';
-                    
-                    if (shareBtn) {
-                        shareBtn.classList.remove('visible');
-                    }
-                }
-            }
-        }
-
-        function shareReport() {
-            var inputs = document.querySelectorAll('.calc-input');
-            var data = {};
-            
-            for (var i = 0; i < TPA_LIST.length; i++) {
-                data[i] = { 
-                    name: TPA_LIST[i], 
-                    mat: 'Не выбрано', 
-                    perBox: 0, 
-                    boxes: 0, 
-                    weight: 0, 
-                    defect: 0,
-                    batchTotal: 0
-                };
-            }
-
-            for (var j = 0; j < inputs.length; j++) {
-                var input = inputs[j];
-                var idx = input.getAttribute('data-idx');
-                var field = input.getAttribute('data-field');
-                if (field === 'mat') {
-                    data[idx].mat = input.value;
-                } else {                    var val = parseFloat(input.value);
-                    if (!isNaN(val) && val >= 0) {
-                        data[idx][field] = val;
-                    }
-                }
-            }
-
-            var now = new Date();
-            var dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
-            
-            var reportLines = [];
-            reportLines.push('📊 ОТЧЁТ ТПА');
-            reportLines.push('📅 Дата: ' + dateStr);
-            reportLines.push('━━━━━━━━━━━━━━━━━━━━');
-
-            var materialTotals = {};
-            var totalAllGood = 0;
-            var totalAllDefect = 0;
-
-            for (var k = 0; k < TPA_LIST.length; k++) {
-                var tpa = TPA_LIST[k];
-                var d = data[k];
-                
-                var card = document.querySelector('[data-tpa="' + tpa + '"]');
-                var isCardVisible = !card.classList.contains('tpa-collapsed');
-                
-                var goodParts = d.perBox * d.boxes;
-                var defectParts = d.defect;
-                var batchParts = d.batchTotal;
-                var batchPartsToday = batchParts + goodParts;
-                
-                if (isCardVisible && (goodParts > 0 || defectParts > 0 || batchPartsToday > 0)) {
-                    var goodWeightKg = (goodParts * d.weight) / 1000;
-                    var defectWeightKg = (defectParts * d.weight) / 1000;
-                    var batchWeightKg = (batchPartsToday * d.weight) / 1000;
-                    
-                    reportLines.push(`🏭 ${tpa} (${d.mat})`);
-                    reportLines.push(`   ✅ Готовые: ${goodParts} шт (${goodWeightKg.toFixed(3)} кг)`);
-                    if (defectParts > 0) {
-                        reportLines.push(`   ❌ Брак: ${defectParts} шт (${defectWeightKg.toFixed(3)} кг)`);
-                    }
-                    if (batchPartsToday > 0) {
-                        reportLines.push(`   📦 Партия (вкл. смену): ${batchPartsToday} шт (${batchWeightKg.toFixed(3)} кг)`);
-                    }
-                    reportLines.push('');
-
-                    if (!materialTotals[d.mat]) {
-                        materialTotals[d.mat] = { good: 0, defect: 0 };
-                    }
-                    materialTotals[d.mat].good += goodWeightKg;                    materialTotals[d.mat].defect += defectWeightKg;
-                    totalAllGood += goodWeightKg;
-                    totalAllDefect += defectWeightKg;
-                }
-            }
-
-            reportLines.push('━━━━━━━━━━━━━━━━━━━━');
-            reportLines.push('📦 ИТОГО ПО СЫРЬЮ (только видимые ТПА):');
-            reportLines.push(`   Готовые: ${totalAllGood.toFixed(3)} кг`);
-            if (totalAllDefect > 0) {
-                reportLines.push(`   Брак: ${totalAllDefect.toFixed(3)} кг`);
-            }
-            reportLines.push(`   Всего: ${(totalAllGood + totalAllDefect).toFixed(3)} кг`);
-
-            var report = reportLines.join('\n');
-
-            var modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.7);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1000;
-            `;
-            modal.innerHTML = `
-                <div style="
-                    background: var(--card);
-                    border-radius:16px;
-                    padding:20px;
-                    max-width:95%;
-                    width:400px;
-                    box-shadow:0 12px 24px rgba(0,0,0,0.2);
-                    border:1px solid var(--border);
-                ">
-                <h3 style="color: var(--primary); margin-top:0;">📤 Поделиться отчётом</h3>
-                <textarea id="report-text" rows="5" style="
-                    width:100%;
-                    padding:12px;
-                    border:1px solid var(--border);
-                    border-radius:10px;
-                    font-size:14px;
-                    background:var(--card);
-                    color:var(--text);
-                    resize:none;
-                ">${report}</textarea>
-                <div style="display:flex; gap:10px; margin-top:16px;">
-                    <button class="btn-copy" style="
-                        flex:1;                        padding:12px;
-                        background:var(--success);
-                        color:white;
-                        border:none;
-                        border-radius:10px;
-                        font-weight:600;
-                    ">📋 Скопировать</button>
-                    <button class="btn-whatsapp" style="
-                        flex:1;
-                        padding:12px;
-                        background:#25D366;
-                        color:white;
-                        border:none;
-                        border-radius:10px;
-                        font-weight:600;
-                    ">💬 WhatsApp</button>
-                </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            var textArea = modal.querySelector('#report-text');
-            var btnCopy = modal.querySelector('.btn-copy');
-            var btnWhatsApp = modal.querySelector('.btn-whatsapp');
-
-            btnCopy.onclick = function() {
-                navigator.clipboard.writeText(report).then(() => {
-                    btnCopy.textContent = '✅ Скопировано!';
-                    setTimeout(() => { btnCopy.textContent = '📋 Скопировать'; }, 2000);
-                });
-            };
-
-            btnWhatsApp.onclick = function() {
-                var encoded = encodeURIComponent(report);
-                window.open(`https://web.whatsapp.com/send?text=${encoded}`, '_blank');
-            };
-
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) modal.remove();
+            document.getElementById('tab-btn-calc').addEventListener('click', function() {
+                switchTab('calc');
             });
-        }
-function switchTab(tabName) {
-            var tabContents = document.querySelectorAll('.tab-content');
-            var tabBtns = document.querySelectorAll('.tab-btn');
-            
-            for (var i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove('active');
-            }
-            for (var j = 0; j < tabBtns.length; j++) {
-                tabBtns[j].classList.remove('active');
-            }
-            
-            document.getElementById('tab-' + tabName).classList.add('active');
-            
-            if (tabName === 'calc') {
-                document.getElementById('tab-btn-calc').classList.add('active');
-            } else {
-                document.getElementById('tab-btn-setup').classList.add('active');
-                calculateAll();
-            }
-        }
+            document.getElementById('tab-btn-setup').addEventListener('click', function() {
+                switchTab('setup');
+            });
 
-        function resetAll() {
-            if(confirm('Очистить все введенные данные? Настройки темы и сворачивания ТПА останутся.')) {
-                var inputs = document.querySelectorAll('.calc-input');
-                for (var i = 0; i < inputs.length; i++) {
-                    var input = inputs[i];
-                    if (input.tagName === 'SELECT') {
-                        input.selectedIndex = 0;
-                    } else {
-                        input.value = '';
-                    }
-                }
-                localStorage.removeItem('tpa_calc_data');
-                calculateAll();
-            }
+            calculateAll();
         }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-    </script>
-</body>
-</html>
