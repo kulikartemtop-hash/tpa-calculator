@@ -786,9 +786,9 @@ function calculateAll() {
                 
                 var goodWeightKg = (goodParts * d.weight) / 1000;
                 var defectWeightKg = (defectParts * d.weight) / 1000;
-                var totalWeightKg = totalBatchWeightKg + defectWeightKg;
                 var specifiedBatchWeightKg = (specifiedBatchParts * d.weight) / 1000;
                 var totalBatchWeightKg = (totalBatchParts * d.weight) / 1000;
+                var totalWeightKg = totalBatchWeightKg;
                 var resEl = document.getElementById('res-' + k);
                 var batchInfoEl = document.getElementById('batch-info-' + k);
                 
