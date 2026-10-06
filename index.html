@@ -776,22 +776,24 @@ function calculateAll() {
                 var tpa = TPA_LIST[k];
                 var d = data[k];
                 
+                // Готовая продукция за смену.
                 var goodParts = d.perBox * d.boxes;
                 var defectParts = d.defect;
-                var batchParts = d.batchTotal;
                 
-                // Партия (вкл. смену) — только для отображения в карточке
-                var batchPartsToday = batchParts + goodParts;
+                // Указанная партия + изготовленная продукция за смену = ОБЩАЯ ПАРТИЯ ТПА.
+                var specifiedBatchParts = d.batchTotal;
+                var totalBatchParts = specifiedBatchParts + goodParts;
                 
                 var goodWeightKg = (goodParts * d.weight) / 1000;
                 var defectWeightKg = (defectParts * d.weight) / 1000;
                 var totalWeightKg = goodWeightKg + defectWeightKg;
-                var batchWeightKg = (batchPartsToday * d.weight) / 1000;
+                var specifiedBatchWeightKg = (specifiedBatchParts * d.weight) / 1000;
+                var totalBatchWeightKg = (totalBatchParts * d.weight) / 1000;
                 var resEl = document.getElementById('res-' + k);
                 var batchInfoEl = document.getElementById('batch-info-' + k);
                 
                 if (resEl) {
-                    if (goodParts > 0 || defectParts > 0) {
+                    if (goodParts > 0 || defectParts > 0 || specifiedBatchParts > 0) {
                         var miniHtml = '<div class="good">Гот: ' + goodParts + ' шт</div>';
                         if (defectParts > 0) {
                             miniHtml += '<div class="defect">Брак: ' + defectParts + ' шт</div>';
@@ -804,14 +806,14 @@ function calculateAll() {
                 }
                 
                 if (batchInfoEl) {
-                    batchInfoEl.textContent = 'Партия: ' + batchParts + ' шт / ' + ((batchParts * d.weight) / 1000).toFixed(3) + ' кг';
+                    batchInfoEl.textContent = 'Партия: ' + specifiedBatchParts + ' шт / ' + specifiedBatchWeightKg.toFixed(3) + ' кг';
                 }
 
                 // Проверяем, видима ли карточка (не свёрнута)
                 var card = document.querySelector('[data-tpa="' + tpa + '"]');
                 var isCardVisible = !card.classList.contains('tpa-collapsed');
 
-                if (isCardVisible && (goodParts > 0 || defectParts > 0 || batchPartsToday > 0)) {
+                if (isCardVisible && (goodParts > 0 || defectParts > 0 || specifiedBatchParts > 0)) {
                     summaryHtml += '<div class="summary-item">' +
                         '<div class="summary-tpa">' + tpa + '</div>' +
                         '<div class="summary-data">' +
@@ -819,7 +821,8 @@ function calculateAll() {
                             '<div class="weight-good">Вес готовых: ' + goodWeightKg.toFixed(3) + ' кг</div>' +
                             '<div class="weight-defect">Вес брака: ' + defectWeightKg.toFixed(3) + ' кг</div>' +
                             '<div class="weight-total">Общий вес: ' + totalWeightKg.toFixed(3) + ' кг</div>' +
-                            '<div class="batch-info">📦 Партия (вкл. смену): ' + batchPartsToday + ' шт / ' + batchWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="batch-info">📦 Указанная партия: ' + specifiedBatchParts + ' шт / ' + specifiedBatchWeightKg.toFixed(3) + ' кг</div>' +
+                            '<div class="batch-info">📦 Общая партия ТПА (партия + смена): ' + totalBatchParts + ' шт / ' + totalBatchWeightKg.toFixed(3) + ' кг</div>' +
                         '</div>' +
                     '</div>';
 
@@ -907,6 +910,8 @@ function calculateAll() {
             var materialTotals = {};
             var totalAllGood = 0;
             var totalAllDefect = 0;
+            var totalAllBatchWeight = 0;
+            var totalAllBatchParts = 0;
 
             for (var k = 0; k < TPA_LIST.length; k++) {
                 var tpa = TPA_LIST[k];
@@ -917,21 +922,25 @@ function calculateAll() {
                 
                 var goodParts = d.perBox * d.boxes;
                 var defectParts = d.defect;
-                var batchParts = d.batchTotal;
-                var batchPartsToday = batchParts + goodParts;
+                var specifiedBatchParts = d.batchTotal;
+                var totalBatchParts = specifiedBatchParts + goodParts;
                 
-                if (isCardVisible && (goodParts > 0 || defectParts > 0 || batchPartsToday > 0)) {
+                if (isCardVisible && (goodParts > 0 || defectParts > 0 || specifiedBatchParts > 0)) {
                     var goodWeightKg = (goodParts * d.weight) / 1000;
                     var defectWeightKg = (defectParts * d.weight) / 1000;
-                    var batchWeightKg = (batchPartsToday * d.weight) / 1000;
+                    var specifiedBatchWeightKg = (specifiedBatchParts * d.weight) / 1000;
+                    var totalBatchWeightKg = (totalBatchParts * d.weight) / 1000;
                     
                     reportLines.push(`🏭 ${tpa} (${d.mat})`);
-                    reportLines.push(`   ✅ Готовые: ${goodParts} шт (${goodWeightKg.toFixed(3)} кг)`);
+                    reportLines.push(`   ✅ Готовые за смену: ${goodParts} шт (${goodWeightKg.toFixed(3)} кг)`);
                     if (defectParts > 0) {
                         reportLines.push(`   ❌ Брак: ${defectParts} шт (${defectWeightKg.toFixed(3)} кг)`);
                     }
-                    if (batchPartsToday > 0) {
-                        reportLines.push(`   📦 Партия (вкл. смену): ${batchPartsToday} шт (${batchWeightKg.toFixed(3)} кг)`);
+                    if (specifiedBatchParts > 0) {
+                        reportLines.push(`   📦 Указанная партия: ${specifiedBatchParts} шт (${specifiedBatchWeightKg.toFixed(3)} кг)`);
+                    }
+                    if (totalBatchParts > 0) {
+                        reportLines.push(`   📦 ОБЩАЯ ПАРТИЯ ТПА: ${totalBatchParts} шт (${totalBatchWeightKg.toFixed(3)} кг)`);
                     }
                     reportLines.push('');
                     if (!materialTotals[d.mat]) {
@@ -941,6 +950,8 @@ function calculateAll() {
                     materialTotals[d.mat].defect += defectWeightKg;
                     totalAllGood += goodWeightKg;
                     totalAllDefect += defectWeightKg;
+                    totalAllBatchParts += totalBatchParts;
+                    totalAllBatchWeight += totalBatchWeightKg;
                 }
             }
 
@@ -950,7 +961,8 @@ function calculateAll() {
             if (totalAllDefect > 0) {
                 reportLines.push(`   Брак: ${totalAllDefect.toFixed(3)} кг`);
             }
-            reportLines.push(`   Всего: ${(totalAllGood + totalAllDefect).toFixed(3)} кг`);
+            reportLines.push(`   Всего готовые + брак: ${(totalAllGood + totalAllDefect).toFixed(3)} кг`);
+            reportLines.push(`   📦 Общая партия всех ТПА: ${totalAllBatchParts} шт (${totalAllBatchWeight.toFixed(3)} кг)`);
 
             var report = reportLines.join('\n');
 
